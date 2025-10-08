@@ -11,6 +11,22 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+#added
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env
+load_dotenv()
+
+# Supabase credentials
+"""
+OPENROUTER_API_KEY = os.getenv("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")
+SUPABASE_URL = os.getenv("https://urwfbvpkohuiscyefknw.supabase.co")
+SUPABASE_KEY = os.getenv("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyd2ZidnBrb2h1aXNjeWVma253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwMzU2NTYsImV4cCI6MjA3NDYxMTY1Nn0.LkKC17vpGOCElyAb8GKntVvOLX1Xygq5-kWkoY5MdNk")
+"""
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,7 +72,7 @@ ROOT_URLCONF = 'self_productivity.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'productivity_app', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,7 +134,23 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'productivity_app', 'static'),
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#CHANGES EMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.office365.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your_outlook_email@outlook.com'
+EMAIL_HOST_PASSWORD = 'your_outlook_password'  # or app password if enabled
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
