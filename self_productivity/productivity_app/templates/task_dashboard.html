@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Dashboard</title>
+</head>
+<body> 
+    <div class="card">
+    <h2>🎯 Welcome, {{ user_name }}!</h2>
+    <p>Generate a task that matches your mood today 👇</p>
+
+    <select id="type">
+      <option value="stationary">Stationary</option>
+      <option value="active">Active</option>
+    </select><br>
+
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select><br>
+
+    <select id="frequency">
+      <option value="today">Only for today</option>
+      <option value="daily">Everyday for a week</option>
+    </select><br>
+
+    <select id="duration">
+      <option value="5min">5 mins</option>
+      <option value="10min">10 mins</option>
+      <option value="30min">30 mins</option>
+      <option value="1hr">1 hour</option>
+    </select><br>
+
+    <button onclick="generateTask()">Generate Task</button>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+   async function generateTask() {
+  const type = document.getElementById("type").value;
+  const difficulty = document.getElementById("difficulty").value;
+  const frequency = document.getElementById("frequency").value;
+  const duration = document.getElementById("duration").value;
+  const email = "{{ user_email }}";
+
+  document.getElementById("output").innerHTML = "⏳ Generating task...";
+
+  try {
+    const res = await fetch("/generate-task/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type, difficulty, frequency, duration, email })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      document.getElementById("output").innerHTML = `
+        <h3>✅ Generated Task:</h3>
+        <p>${data.generated_task}</p>
+      `;
+    } else {
+      document.getElementById("output").innerHTML = `❌ Error: ${JSON.stringify(data.error) || "Could not generate task"}`;
+
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById("output").innerHTML = "⚠️ Failed to reach server.";
+  }
+}
+
+  </script>
+</body>
+</body>
+</html>
