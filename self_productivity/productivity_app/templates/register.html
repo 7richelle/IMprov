@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Self Productivity Tool - Sign Up</title>
+  <!-- Correct static CSS path -->
+  <link rel="stylesheet" href="{% static 'register.css' %}?v=2">
+  <!-- Lottie Script -->
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <dotlottie-wc 
+        src="https://lottie.host/7a492ce9-4df0-40da-b1bb-dce3a1fd9ba0/yBwQWwNcBN.lottie" 
+        style="width: 300px; height: 300px;" 
+        autoplay 
+        loop>
+      </dotlottie-wc>
+    </div>
+    <div class="right">
+      <h2>Sign Up</h2>
+      <p>Create an account to get started.</p>
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" placeholder="Enter your name" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" name="email" id="email" placeholder="example@gmail.com" required>
+
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="********" required>
+
+        <button type="submit">Sign Up</button>
+        <p class="login-text">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
