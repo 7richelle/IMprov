@@ -10,18 +10,18 @@
 <body>
   <div class="dashboard">
     <header class="top-bar">
-      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Back to Dashboard</a>
+      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
     </header>
 
     <main class="content">
-      <h2>✅ Your Task is Ready!</h2>
+      <h2>Your Task is Ready!</h2>
       <p>Here’s the task generated for you:</p>
 
       <div class="task-box">
         <p>{{ generated_task }}</p>
       </div>
 
-      <a href="{% url 'task_dashboard' %}" class="next-btn">🔁 Generate Another Task</a>
+      <a href="{% url 'task_dashboard' %}" class="next-btn">Generate Another Task</a>
     </main>
   </div>
 </body>
