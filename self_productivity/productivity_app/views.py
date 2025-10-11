@@ -8,12 +8,11 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import requests
 from django.http import JsonResponse
-#
+from urllib.parse import unquote
 # --- SUPABASE CONFIG ---
 load_dotenv()
-
-SUPABASE_URL = "https://urwfbvpkohuiscyefknw.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyd2ZidnBrb2h1aXNjeWVma253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwMzU2NTYsImV4cCI6MjA3NDYxMTY1Nn0.LkKC17vpGOCElyAb8GKntVvOLX1Xygq5-kWkoY5MdNk"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -97,9 +96,23 @@ def generate_task(request):
 
             # 🧠 AI prompt
             prompt = (
-                f"Generate one {task_type} productivity task that is {difficulty} difficulty, "
-                f"should last about {duration}, and is meant to be done {frequency}. "
-                f"Make it sound short, motivating, and specific."
+                 f"Generate one unique {task_type} productivity task that matches these details:\n"
+    f"- Difficulty: {difficulty}\n"
+    f"- Duration: {duration}\n"
+    f"- Frequency: {frequency}\n"
+    f"- Task type: {task_type} (Active = movement, exercise, or cleaning. Stationary = reading, writing, organizing, or creative focus.)\n\n"
+    
+    f"The task must:\n"
+    f"1. Be realistic and doable for that difficulty level and duration.\n"
+    f"2. Match the type — if it's active, make it physical (e.g., walking, stretching, chores, exercise). "
+    f"If it's stationary, make it calm or focus-based (e.g., reading, writing, organizing desk, doing creative work).\n"
+    f"3. Speak directly to the user (use 'you').\n"
+    f"4. Be short, specific, and easy to understand — 1 to 2 sentences only.\n"
+    f"5. Avoid journaling, meditation, or emotional reflection.\n"
+    f"6. Make each generation unique by varying the activity, not reusing old patterns.\n\n"
+    
+    f"After the task, add one short line starting with 'Why it helps:' or 'Why it works:' that gives a quick motivational reason."
+    f"Add one short line explaining why it's helpful or satisfying."
             )
 
             # 🔑 Load OpenRouter API key securely
@@ -107,19 +120,22 @@ def generate_task(request):
 
             # 🛰 Send request to OpenRouter
             response = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "model": "deepseek/deepseek-chat-v3.1:free",
-                    "messages": [
-                        {"role": "system", "content": "You are a helpful productivity coach."},
-                        {"role": "user", "content": prompt},
-                    ],
-                },
-            )
+    "https://openrouter.ai/api/v1/chat/completions",
+    headers={
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json",
+    },
+    json={
+        "model": "nvidia/nemotron-nano-9b-v2:free",
+        "messages": [
+            {"role": "system", "content": "You are a helpful productivity coach."},
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": 0.7,  # controls randomness: 0=deterministic, 1=very creative
+        "top_p": 0.9          # optional, adds extra variation
+    },
+)
+
 
             ai_result = response.json()
             if response.status_code != 200 or "choices" not in ai_result:
@@ -183,4 +199,30 @@ def task_dashboard(request):
         },
     )
 
+#CHANGED
+def task_frequency(request):
+    return render(request, "task_frequency.html")
 
+
+def task_duration(request):
+    # get data from previous selections
+    task_type = request.GET.get('type')
+    difficulty = request.GET.get('difficulty')
+    frequency = request.GET.get('frequency')
+
+    if request.method == 'POST':
+        duration = request.POST.get('duration')
+
+        # 🧠 Example: generate a simple task description (you can replace this with your AI call later)
+        generated_task = f"A {difficulty} {task_type} task for {duration} minutes ({frequency} frequency)."
+
+        # ✅ Redirect to the result page, passing the generated task as a query parameter
+        return redirect(f'/result/?task={generated_task}')
+
+    # if not POST, just show the duration selection page
+    return render(request, "task_duration.html")
+
+def task_result(request):
+    task_param = request.GET.get("task", "")
+    generated_task = unquote(task_param)
+    return render(request, "task_result.html", {"generated_task": generated_task})

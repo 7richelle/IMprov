@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Frequency</title>
+  <link rel="stylesheet" href="{% static 'task_frequency.css' %}">
+</head>
+<body>
+  <div class="dashboard">
+    <header class="top-bar">
+      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Back</a>
+    </header>
+
+    <main class="content">
+      <h2>📅 Task Frequency</h2>
+      <p>How often would you like to do this task?</p>
+
+      <form action="{% url 'task_duration' %}" method="get" class="task-form">
+        <input type="hidden" name="type" value="{{ request.GET.type }}">
+        <input type="hidden" name="difficulty" value="{{ request.GET.difficulty }}">
+
+        <div class="frequency-options">
+          <label class="frequency-btn">
+            <input type="radio" name="frequency" value="today" required>
+            <span>Only for today<br><small>Just one quick task</small></span>
+          </label>
+
+          <label class="frequency-btn">
+            <input type="radio" name="frequency" value="daily">
+            <span>Everyday for a week<br><small>Build a daily habit</small></span>
+          </label>
+        </div>
+
+        <button type="submit" class="next-btn">Next ➡️</button>
+      </form>
+    </main>
+  </div>
+</body>
+</html>
