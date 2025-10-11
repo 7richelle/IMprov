@@ -1,78 +1,64 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Dashboard</title>
+  <link rel="stylesheet" href="{% static 'task_dashboard.css' %}">
 </head>
-<body> 
-    <div class="card">
-    <h2>🎯 Welcome, {{ user_name }}!</h2>
-    <p>Generate a task that matches your mood today 👇</p>
+<body>
+  <div class="dashboard">
+    <header class="top-bar">
+      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+      <form action="{% url 'login' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </header>
 
-    <select id="type">
-      <option value="stationary">Stationary</option>
-      <option value="active">Active</option>
-    </select><br>
+    <main class="content">
+      <h2>Choose your type of task</h2>
+      <form action="{% url 'task_frequency' %}" method="get" class="task-form">
+        <div class="task-type">
+          <label class="option-card">
+            <input type="radio" name="type" value="stationary" required>
+            <div class="option-content">
+              <div class="icon">🪑</div>
+              <h3>Stationary</h3>
+              <p>Stationary tasks are done while sitting or with minimal movement.</p>
+            </div>
+          </label>
 
-    <select id="difficulty">
-      <option value="easy">Easy</option>
-      <option value="medium">Medium</option>
-      <option value="hard">Hard</option>
-    </select><br>
+          <label class="option-card">
+            <input type="radio" name="type" value="active" required>
+            <div class="option-content">
+              <div class="icon">🏃</div>
+              <h3>Active</h3>
+              <p>Active tasks involve movement and physical activity.</p>
+            </div>
+          </label>
+        </div>
+<br></br>
+        <h2>How difficult should your task be?</h2>
+        <div class="difficulty">
+          <label class="difficulty-btn">
+            <input type="radio" name="difficulty" value="easy" required>
+            <span>Easy<br><small>I want it laid-back</small></span>
+          </label>
+          <label class="difficulty-btn">
+            <input type="radio" name="difficulty" value="medium">
+            <span>Medium<br><small>I want to be preoccupied</small></span>
+          </label>
+          <label class="difficulty-btn">
+            <input type="radio" name="difficulty" value="hard">
+            <span>Hard<br><small>I want a challenge</small></span>
+          </label>
+        </div>
 
-    <select id="frequency">
-      <option value="today">Only for today</option>
-      <option value="daily">Everyday for a week</option>
-    </select><br>
-
-    <select id="duration">
-      <option value="5min">5 mins</option>
-      <option value="10min">10 mins</option>
-      <option value="30min">30 mins</option>
-      <option value="1hr">1 hour</option>
-    </select><br>
-
-    <button onclick="generateTask()">Generate Task</button>
-
-    <div id="output"></div>
+        <button type="submit" class="next-btn">Next</button>
+      </form>
+    </main>
   </div>
-
-  <script>
-   async function generateTask() {
-  const type = document.getElementById("type").value;
-  const difficulty = document.getElementById("difficulty").value;
-  const frequency = document.getElementById("frequency").value;
-  const duration = document.getElementById("duration").value;
-  const email = "{{ user_email }}";
-
-  document.getElementById("output").innerHTML = "⏳ Generating task...";
-
-  try {
-    const res = await fetch("/generate-task/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, difficulty, frequency, duration, email })
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      document.getElementById("output").innerHTML = `
-        <h3>✅ Generated Task:</h3>
-        <p>${data.generated_task}</p>
-      `;
-    } else {
-      document.getElementById("output").innerHTML = `❌ Error: ${JSON.stringify(data.error) || "Could not generate task"}`;
-
-    }
-  } catch (err) {
-    console.error(err);
-    document.getElementById("output").innerHTML = "⚠️ Failed to reach server.";
-  }
-}
-
-  </script>
-</body>
 </body>
 </html>
