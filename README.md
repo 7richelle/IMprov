@@ -1,18 +1,13 @@
-***IMprov***
-
+# IMprov
 IMprov is a self-improvement app that improves growth through action. With IMprov, you can generate a random task every day to help you develop better habits and stay motivated. Make every moment an opportunity to better yourself. **Improve** yourself with **IMprov**.
 
----
-
-**Tech Stack**
+## Tech Stack
 - **Frontend**: HTML and CSS
 - **Backend**: Django
 - **Database**: Supabase
 - **Development Tools**: VS Code
 
----
-
-**Setup**
+## Setup
 1. Ensure Python and Git are installed.
 2. Clone the repository into your local device using `git clone https://github.com/7richelle/CSIT327-G6-IMprov.git`.
 3. Go one folder down by typing `cd self_productivity` into your terminal.
@@ -27,9 +22,25 @@ IMprov is a self-improvement app that improves growth through action. With IMpro
    - `python manage.py makemigrations`
    - `python manage.py migrate`
 
----
-
-**Running the Server**
+## Running the Server
 1. Ensure that the virtual environment is running.
 2. Run `python manage.py runserver`.
 3. Enter the server link that the terminal gives you into your browser (i.e. `http://127.0.0.1:8000/`)
+
+## Team Members
+
+**Developer Team**
+- Richelle B. Jaducana (Full Stack Developer) - richelle.jaducana@cit.edu
+- Romil Joseph B. Kimilat (Full Stack Developer) - romiljoseph.kimilat@cit.edu
+- Cris Angelo B. Labajo (Full Stack Developer) - crisangelo.labajo@cit.edu
+ 
+**Project Manager Team**
+- Luezyl Dominic C. Escasinas (Scrum Master) - luezyldominic.escasinas@cit.edu
+- Edward D. Español (Scrum Master) - edward.espanol@cit.edu
+- Earl Gerald R. Esparcia (Product Owner) - earlgerald.esparcia@cit.edu
+- Gerard Grant M. Estela (Business Analyst) - gerardgrant.estela@cit.edu
+
+---
+
+## Deployed Link
+- *Application is not yet deployed.*
