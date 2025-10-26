@@ -23,6 +23,15 @@
     <div class="right">
       <h2>Sign Up</h2>
       <p>Create an account to get started.</p>
+
+ <!--{% if messages %}
+  <div class="alert-card">
+    {% for message in messages %}
+      <p>{{ message }}</p>
+    {% endfor %}
+  </div>
+{% endif %}-->
+
       <form method="POST" action="{% url 'register' %}">
         {% csrf_token %}
 
