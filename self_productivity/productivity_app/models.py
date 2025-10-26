@@ -4,6 +4,9 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
+from django.utils import timezone
+import datetime
+
 class Task(models.Model):
     TASK_TYPE_CHOICES = [
         ('stationary', 'Stationary'),
@@ -42,8 +45,18 @@ class Task(models.Model):
         return f"{self.description[:30]}..."
 
 
-class TaskSession(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    start_time = models.DateTimeField(auto_now_add=True)
-    end_time = models.DateTimeField(null=True, blank=True)
-    completion_status = models.CharField(max_length=20, default='in_progress')
+##class TaskSession(models.Model):
+  ##  task = models.ForeignKey(Task, on_delete=models.CASCADE)
+     ##  start_time = models.DateTimeField(auto_now_add=True)
+     ##  end_time = models.DateTimeField(null=True, blank=True)
+     ##  completion_status = models.CharField(max_length=20, default='in_progress')
+
+
+class PasswordResetOTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def is_valid(self):
+        # OTP valid for 5 minutes
+        return timezone.now() - self.created_at < datetime.timedelta(minutes=5)
