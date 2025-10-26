@@ -1,0 +1,134 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #D5F3FF, #4A90E2);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 40px;
+}
+
+.dashboard {
+  background: #fff;
+  width: 90%;
+  max-width: 1200px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  padding: 40px 50px;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.home-link {
+  text-decoration: none;
+  color: #4A90E2;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.content {
+  text-align: center;
+  flex: 1;
+}
+
+.content h2 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+
+.content p {
+  color: #555;
+  margin-bottom: 30px;
+}
+
+/* Layout for task + timer */
+.timer-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Task box */
+.task-box {
+  flex: 1;
+  background: #f0f8ff;
+  border: 2px solid #4A90E2;
+  border-radius: 10px;
+  padding: 30px 40px;
+  min-width: 300px;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #333;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.task-box h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+/* Timer panel */
+.timer-panel {
+  flex: 0 0 300px;
+  background: #f7fbff;
+  border: 2px solid #4A90E2;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.timer-display {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #4A90E2;
+  margin-bottom: 25px;
+}
+
+.timer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.start-btn, .end-btn {
+  background: #50E3C2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.start-btn:hover {
+  background: #4A90E2;
+}
+
+.end-btn {
+  background: #e74c3c;
+}
+
+.end-btn:hover {
+  background: #c0392b;
+}
