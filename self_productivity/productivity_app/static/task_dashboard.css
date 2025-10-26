@@ -31,9 +31,10 @@ body {
 }
 
 .home-link {
-  font-size: 1rem;
-  color: #333;
   text-decoration: none;
+  color: #4A90E2;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
 .logout-btn {
