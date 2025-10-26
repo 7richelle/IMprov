@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify OTP - Self Productivity Tool</title>
+  <link rel="stylesheet" href="{% static 'login.css' %}">
+</head>
+<body>
+  <div class="container">
+    <!-- Left side animation -->
+    <div class="left">
+      <dotlottie-wc 
+        src="https://assets1.lottiefiles.com/packages/lf20_jcikwtux.json"
+        style="width: 300px; height: 300px;"
+        autoplay
+        loop>
+      </dotlottie-wc>
+    </div>
+
+    <!-- Right side form -->
+    <div class="right">
+      <h2>Verify OTP</h2>
+      <p>Please enter the 6-digit OTP sent to your registered email.</p>
+
+      {% if messages %}
+      <div class="alert-card">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <label for="otp">One-Time Password</label>
+        <input type="text" name="otp" id="otp" placeholder="Enter OTP" maxlength="6" required>
+
+        <button type="submit">Verify OTP</button>
+      </form>
+
+      <p class="signup-text">
+        Didn’t receive an OTP? <a href="{% url 'forgot_password' %}">Resend</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Load Lottie script at the end -->
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
+</body>
+</html>
