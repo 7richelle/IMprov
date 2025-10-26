@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Timer</title>
+  <link rel="stylesheet" href="{% static 'task_timer.css' %}">
+</head>
+<body>
+  <div class="dashboard">
+    <header class="top-bar">
+      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+    </header>
+
+    <main class="content">
+      <h2> Task Timer</h2>
+      <p>Focus on your task until the timer ends!</p>
+
+      <div class="timer-layout">
+        <!-- Task Box -->
+        <div class="task-box">
+          <h3>Your Task:</h3>
+          <p>{{ generated_task }}</p>
+        </div>
+
+        <!-- Timer Panel -->
+        <div class="timer-panel">
+          <div id="timer" class="timer-display">00:00</div>
+          <div class="timer-buttons">
+            <button id="startBtn" class="start-btn">Start</button>
+            <button id="endBtn" class="end-btn" disabled>End</button>
+          </div>
+        </div>
+      </div>
+    <!-- deleted
+      <audio id="alarmSound" src="{% static 'alarm.mp3' %}" preload="auto"></audio>
+      -->
+    </main>
+  </div>
+
+  <script>
+    let timerInterval;
+    let timeLeft = 0; // in seconds
+    let sessionId = null;
+
+    const duration = "{{ request.GET.duration|default:'5min' }}";
+    const taskId = "{{ request.GET.task_id }}";
+
+    // Convert duration text to seconds
+    const durationMap = {
+      "5min": 5 * 60,
+      "10min": 10 * 60,
+      "30min": 30 * 60,
+      "1hr": 60 * 60
+    };
+    timeLeft = durationMap[duration] || 300;
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    document.getElementById("timer").textContent = formatTime(timeLeft);
+
+    async function startSession() {
+      const res = await fetch("/start-task-session/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ task_id: taskId })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        sessionId = data.session_id;
+        document.getElementById("startBtn").disabled = true;
+        document.getElementById("endBtn").disabled = false;
+        startTimer();
+      } else {
+        alert(" Failed to start task session! " + (data.error || ""));
+      }
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = formatTime(timeLeft);
+
+        // Send progress update every 10 seconds
+        if (sessionId && timeLeft % 10 === 0) {
+          fetch("/update-progress/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              session_id: sessionId,
+              progress: Math.floor(((durationMap[duration] - timeLeft) / durationMap[duration]) * 100)
+            })
+          });
+        }
+
+        // When time is up
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById("endBtn").disabled = true;
+          playAlarm();
+          endSession(true);
+        }
+      }, 1000);
+    }
+//changed
+    /*function playAlarm() {
+      const alarm = document.getElementById("alarmSound");
+      alarm.play().catch(e => console.log("🔇 Alarm blocked:", e));
+      alert("⏰ Time’s up! Great job completing your task!");
+    }*/
+function playAlarm() {
+  try {
+    // Always create a new AudioContext (fix for repeated runs)
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.type = "square";
+    oscillator.frequency.value = 880;
+
+    // Play a repeating beep pattern for 5 seconds
+    let now = audioContext.currentTime;
+    for (let i = 0; i < 10; i++) { // 10 beeps
+      gain.gain.setValueAtTime(0.25, now + i * 0.5);
+      gain.gain.setValueAtTime(0, now + i * 0.5 + 0.25);
+    }
+
+    oscillator.start(now);
+    oscillator.stop(now + 5); // Stop after 5 seconds
+
+    alert(" Time’s up! Great job completing your task!");
+  } catch (e) {
+    console.log(" Audio not supported:", e);
+    alert(" Time’s up! Great job completing your task!");
+  }
+}
+
+// kutob
+    async function endSession(auto = false) {
+      if (!sessionId) return;
+      clearInterval(timerInterval);
+      await fetch("/end-task-session/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId })
+      });
+      if (!auto) alert(" Task session ended.");
+      window.location.href = "{% url 'task_dashboard' %}";
+    }
+
+    document.getElementById("startBtn").onclick = startSession;
+    document.getElementById("endBtn").onclick = () => endSession(false);
+  </script>
+</body>
+</html>
