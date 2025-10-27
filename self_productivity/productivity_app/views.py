@@ -370,7 +370,7 @@ def forgot_password(request):
                 send_mail(
                     subject="Your OTP Code for Password Reset",
                     message=f"Your OTP code is: {otp}\nUse this code to reset your password.",
-                    from_email="chuchayjaducana@gmail.com",  # your Gmail
+                    from_email=os.getenv("EMAIL_HOST_USER"),  # your Gmail
                     recipient_list=[email],
                     fail_silently=False,
                 )
