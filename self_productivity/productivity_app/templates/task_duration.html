@@ -70,7 +70,10 @@
         const data = await res.json();
         if (data.success) {
           const task = encodeURIComponent(data.generated_task);
-          window.location.href = `/result/?task=${task}`;
+          //changed
+          window.location.href = `/result/?task=${task}&duration=${duration}&task_id=${data.task_id}`;
+
+
         } else {
           document.getElementById("output").innerHTML =
             `❌ Error: ${data.error || "Could not generate task"}`;

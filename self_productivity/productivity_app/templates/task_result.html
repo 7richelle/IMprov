@@ -21,7 +21,12 @@
         <p>{{ generated_task }}</p>
       </div>
 
-      <a href="{% url 'task_dashboard' %}" class="next-btn">Generate Another Task</a>
+    
+<a href="{% url 'task_timer' %}?task_id={{ task_id }}&duration={{ duration }}&task={{ generated_task|urlencode }}" 
+   class="next-btn">
+  Go to Timer
+</a>
+
     </main>
   </div>
 </body>
