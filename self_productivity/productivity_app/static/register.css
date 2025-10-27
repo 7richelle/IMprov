@@ -13,6 +13,7 @@ body {
   background: linear-gradient(135deg, #D5F3FF, #4A90E2);
 }
 
+
 .container {
   display: flex;
   width: 1000px;
@@ -102,3 +103,12 @@ button:hover {
   color: #4A90E2;
   text-decoration: none;
 }
+
+.alert-card p {
+  color: red;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+

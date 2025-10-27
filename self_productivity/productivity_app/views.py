@@ -9,6 +9,16 @@ import json
 import requests
 from django.http import JsonResponse
 from urllib.parse import unquote
+import os, json, datetime
+from django.utils import timezone
+from django.contrib.auth.models import User
+import random
+from django.contrib.auth.hashers import make_password, check_password
+from django.core.mail import send_mail
+from .models import PasswordResetOTP
+from .forms import ForgotPasswordForm, OTPVerificationForm, ResetPasswordForm
+from django.contrib.auth.hashers import make_password, check_password  # ✅ ADD THIS
+
 # --- SUPABASE CONFIG ---
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -17,30 +27,31 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
-# ✅ REGISTER FUNCTION
+#  REGISTER FUNCTION
 def register(request):
     if request.method == "POST":
         name = request.POST.get("name")
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        # 1️⃣ Check if email already exists in 'user' table
+        #  Check if email already exists in 'user' table
         check_user = supabase.table("user").select("*").eq("email", email).execute()
 
         if check_user.data:
             messages.warning(request, "Account already exists. Please log in instead.")
-            return redirect("login")
+            return render(request, "register.html")
 
-        # 2️⃣ Insert new user
+
+        #  Insert new user
         data = {
             "name": name,
             "email": email,
-            "password": password,  # ⚠️ For testing; use hash later
+            "password": password,  # store as plain text (varchar) 
         }
 
         response = supabase.table("user").insert(data).execute()
 
-        print("📦 Supabase Insert Response:", response)
+        print(" Supabase Insert Response:", response)
 
         if response.data:
             messages.success(request, "Registration successful! You can now log in.")
@@ -52,36 +63,42 @@ def register(request):
     return render(request, "register.html")
 
 
-# ✅ LOGIN FUNCTION
+#  LOGIN FUNCTION
 def login_user(request):
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        # 3️⃣ Check credentials in 'user' table
-        response = supabase.table("user").select("*").eq("email", email).eq("password", password).execute()
-
-        print("🔍 Login Query Response:", response)
+        # 🔍 Fetch user by email
+        response = supabase.table("user").select("*").eq("email", email).execute()
 
         if response.data:
-            """
-            messages.success(request, f"Welcome back, {response.data[0]['name']}!")
-            #CHANGED
-            return render(request, "task_dashboard.html")
-            """
-            # ✅ CHANGED Save user session
-            request.session["user_email"] = response.data[0]["email"]
-            request.session["user_name"] = response.data[0]["name"]
-            request.session["user_id"] = response.data[0]["user_id"]  # <-- Add this
+            user = response.data[0]
+            stored_password = user["password"]
 
-            messages.success(request, f"Welcome back, {response.data[0]['name']}!")
-            return redirect("task_dashboard")  # redirect to the dashboard page
-        
+            #  Check plain password (no hashing)
+            if password == stored_password:
+                #  Login success
+                request.session["user_email"] = user["email"]
+                request.session["user_name"] = user["name"]
+                request.session["user_id"] = user["user_id"]
+
+                messages.success(request, f"Welcome back, {user['name']}!")
+                return redirect("task_dashboard")
+            else:
+                #  Wrong password
+                messages.error(request, "Incorrect password. Please try again.")
+                return render(request, "login.html")
         else:
-            messages.error(request, "Account does not exist or invalid credentials.")
+            #  No user found
+            messages.error(request, "Email not registered.")
             return render(request, "login.html")
 
+    # Default (GET request)
     return render(request, "login.html")
+
+
+
 
 @csrf_exempt
 def generate_task(request):
@@ -94,7 +111,7 @@ def generate_task(request):
             duration = data.get("duration")
             user_email = data.get("email")
 
-            # 🧠 AI prompt
+            #  AI prompt
             prompt = (
                  f"Generate one unique {task_type} productivity task that matches these details:\n"
     f"- Difficulty: {difficulty}\n"
@@ -115,7 +132,7 @@ def generate_task(request):
     f"Add one short line explaining why it's helpful or satisfying."
             )
 
-            # 🔑 Load OpenRouter API key securely
+            #  Load OpenRouter API key securely
             OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
             # 🛰 Send request to OpenRouter
@@ -139,20 +156,20 @@ def generate_task(request):
 
             ai_result = response.json()
             if response.status_code != 200 or "choices" not in ai_result:
-              print("⚠️ OpenRouter error:", ai_result)
+              print(" OpenRouter error:", ai_result)
               return JsonResponse({
                  "success": False,
                  "error": ai_result.get("error", ai_result)
              })
 
 
-            # ✅ Extract generated text
+            #  Extract generated text
             generated_task = ai_result["choices"][0]["message"]["content"].strip()
 
-            # ✅ Extract generated text
+            #  Extract generated text
             generated_task = ai_result["choices"][0]["message"]["content"].strip()
 
-            # 💾 Save to Supabase "task" table
+            #  Save to Supabase "task" table
             user_id = request.session.get("user_id")  # <-- add this line
             task_data = {
                 "user_id": user_id, 
@@ -174,7 +191,7 @@ def generate_task(request):
             })
 
         except Exception as e:
-            print("❌ Error generating task:", e)
+            print(" Error generating task:", e)
             return JsonResponse({"success": False, "error": str(e)})
 
     return JsonResponse({"error": "Invalid request method"}, status=400)
@@ -213,10 +230,10 @@ def task_duration(request):
     if request.method == 'POST':
         duration = request.POST.get('duration')
 
-        # 🧠 Example: generate a simple task description (you can replace this with your AI call later)
+        #  Example: generate a simple task description (you can replace this with your AI call later)
         generated_task = f"A {difficulty} {task_type} task for {duration} minutes ({frequency} frequency)."
 
-        # ✅ Redirect to the result page, passing the generated task as a query parameter
+        #  Redirect to the result page, passing the generated task as a query parameter
         return redirect(f'/result/?task={generated_task}')
 
     # if not POST, just show the duration selection page
@@ -224,5 +241,220 @@ def task_duration(request):
 
 def task_result(request):
     task_param = request.GET.get("task", "")
+    duration = request.GET.get("duration")
     generated_task = unquote(task_param)
-    return render(request, "task_result.html", {"generated_task": generated_task})
+    task_id = request.GET.get("task_id")  # add this line
+
+    return render(request, "task_result.html", {
+        "generated_task": generated_task,
+        "duration": duration,  
+        "task_id": task_id,  # pass it to template
+        })
+
+
+#  Start a task session
+@csrf_exempt
+def start_task_session(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            task_id = data.get("task_id")
+            user_id = request.session.get("user_id")  # get from session
+
+            if not user_id or not task_id:
+                return JsonResponse({"success": False, "error": "Missing user or task ID"})
+
+            start_time = timezone.localtime(timezone.now()).isoformat()
+
+            response = supabase.table("tasksession").insert({
+                "task_id": task_id,
+                "user_id": user_id,
+                "start_time": start_time,
+                "status": "in_progress",
+                "progress": 0
+            }).execute()
+
+            return JsonResponse({
+                "success": True,
+                "session_id": response.data[0]["session_id"]
+            })
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"success": False, "error": "Invalid request"})
+
+@csrf_exempt
+def update_progress(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            session_id = data.get("session_id")
+            progress = data.get("progress")
+
+            if not session_id:
+                return JsonResponse({"success": False, "error": "Missing session_id"})
+
+            supabase.table("tasksession").update({"progress": progress}).eq("session_id", session_id).execute()
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+@csrf_exempt
+def end_task_session(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            session_id = data.get("session_id")
+
+            if not session_id:
+                return JsonResponse({"success": False, "error": "Missing session_id"})
+
+            supabase.table("tasksession").update({  #  lowercase name
+                "end_time": timezone.localtime(timezone.now()).isoformat(),
+                "status": "completed"
+            }).eq("session_id", session_id).execute()
+
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+#  Timer page (HTML)
+def task_timer(request):
+    task_id = request.GET.get("task_id")
+    duration = request.GET.get("duration")
+    generated_task = request.GET.get("task")  # may be None
+
+    #  Safely handle missing 'task' parameter
+    if generated_task:
+        generated_task = unquote(generated_task)
+    else:
+        generated_task = "No task description provided."
+
+    return render(request, "task_timer.html", {
+        "task_id": task_id,
+        "duration": duration,
+        "generated_task": generated_task
+    })
+
+
+#PASSWORD RESET
+#  PASSWORD RESET (Using Supabase + Gmail OTP)
+
+def forgot_password(request):
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+
+            # 🔍 Check if user exists in Supabase
+            check_user = supabase.table("user").select("*").eq("email", email).execute()
+            print("Check user before update:", check_user.data)
+            if not check_user.data:
+                messages.error(request, "No account found with that email.")
+                return render(request, "forgot_password.html", {"form": form})
+
+            #  Generate and store 6-digit OTP
+            otp = str(random.randint(100000, 999999))
+            request.session["otp"] = otp
+            request.session["email"] = email
+
+            # Send OTP via Gmail
+            try:
+                send_mail(
+                    subject="Your OTP Code for Password Reset",
+                    message=f"Your OTP code is: {otp}\nUse this code to reset your password.",
+                    from_email="chuchayjaducana@gmail.com",  # your Gmail
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+                print(f" Sent OTP {otp} to {email}")  # Debug log
+                messages.success(request, "OTP sent to your email.")
+                return redirect("verify_otp")
+            except Exception as e:
+                print(" Email sending failed:", e)
+                messages.error(request, "Failed to send email. Please try again later.")
+    else:
+        form = ForgotPasswordForm()
+
+    return render(request, "forgot_password.html", {"form": form})
+
+
+def verify_otp(request):
+    if request.method == 'POST':
+        form = OTPVerificationForm(request.POST)
+        if form.is_valid():
+            otp_entered = form.cleaned_data['otp']
+            otp_saved = request.session.get('otp')
+
+            if otp_entered == otp_saved:
+                request.session["email_verified"] = True
+                messages.success(request, "OTP verified! You can now reset your password.")
+                return redirect("reset_password")
+            else:
+                messages.error(request, "Invalid OTP. Please try again.")
+    else:
+        form = OTPVerificationForm()
+
+    return render(request, "verify_otp.html", {"form": form})
+
+
+def reset_password(request):
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            email = request.session.get("email")
+            new_password = form.cleaned_data["new_password"]
+
+            print("DEBUG: session email ->", email)
+            print("DEBUG: new_password ->", new_password)
+
+            if not email:
+                messages.error(request, "Session expired. Please restart the password reset process.")
+                return redirect("forgot_password")
+
+            try:
+                check_user = supabase.table("user").select("*").eq("email", email).execute()
+                print("DEBUG: check_user response ->", check_user)
+                print("DEBUG: check_user.data ->", check_user.data)
+
+                # try update and print full response attributes
+                update_response = (
+                    supabase.table("user")
+                    .update({"password": new_password})
+                    .eq("email", email)
+                    .execute()
+                )
+
+                # Print everything available on response object
+                print("DEBUG: update_response ->", update_response)
+                print("DEBUG: update_response.data ->", getattr(update_response, "data", None))
+                print("DEBUG: update_response.status_code ->", getattr(update_response, "status_code", None))
+                print("DEBUG: update_response.error ->", getattr(update_response, "error", None))
+
+                # decide success
+                if getattr(update_response, "data", None):
+                    messages.success(request, "Password reset successful! You can now log in.")
+                    request.session.flush()
+                    return redirect("login")
+                else:
+                    # give a more helpful message
+                    messages.error(request, " Password not updated. Check Supabase policies or server logs.")
+                    print("WARN: Update returned empty data. Likely blocked by RLS/policies or permission issue.")
+            except Exception as e:
+                print(" Exception when resetting password:", e)
+                messages.error(request, f"Something went wrong: {e}")
+    else:
+        form = ResetPasswordForm()
+
+    return render(request, "reset_password.html", {"form": form})
+
+
+
+
