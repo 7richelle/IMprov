@@ -28,7 +28,13 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 #FOR DELETE USERS FOR ADMIN WAPAY LABOT
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
-
+def get_supabase_client() -> Client:
+    """
+    Initialize Supabase client only at runtime to prevent build errors on Render.
+    """
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_KEY")
+    return create_client(url, key)
 #kutob diri
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -115,8 +121,8 @@ else:
             conn_max_age=600,
             ssl_require=True
         )
-    }
-"""
+    } diri kutob ang final
+
 #FOR LOCALHOST WAY LABOT SA PAG COMMIT
 # --- DATABASE CONFIGURATION ---
 if os.environ.get("RENDER", "") == "true":
@@ -136,7 +142,37 @@ else:
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
+    } diri ang ikaduha testing""" 
+# Detect if this is a Render build (no DB network yet)
+IS_RENDER_BUILD = os.environ.get("RENDER_BUILD", "") == "true"
+
+if IS_RENDER_BUILD:
+    # Use SQLite during build to avoid Supabase network error
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
+elif os.environ.get("RENDER", "") == "true":
+    # Use Supabase Postgres at runtime
+    DATABASE_URL = os.environ.get("DATABASE_URL")
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # Local dev: use SQLite
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
