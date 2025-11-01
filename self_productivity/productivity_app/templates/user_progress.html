@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user_name }}'s Progress</title>
+    <link rel="stylesheet" href="{% static 'user_progress.css' %}">
+</head>
+<body>
+  <div class="dashboard">
+    <header class="top-bar">
+      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+
+      <div class="right-buttons">
+        <a href ="{% url 'user_progress' %}" class="progress-link">Progress</a>
+         <a href ="{% url 'profile_user' %}" class="progress-link">Profile</a>
+        <form action="{% url 'login' %}" method="post" class="logout-form">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="content">
+      <h2>{{ user_name }}’s Progress Overview</h2>
+      <p class="total">Total Tasks Completed: <span>{{ total_tasks }}</span></p>
+
+      <div class="progress-cards">
+        <div class="progress-card stationary">
+          <div class="icon">🪑</div>
+          <h3>Stationary Tasks</h3>
+          <p><strong>Total:</strong> {{ stationary_total }}</p>
+          <p>Easy: {{ stationary_counts.easy }} | Medium: {{ stationary_counts.medium }} | Hard: {{ stationary_counts.hard }}</p>
+        </div>
+
+        <div class="progress-card active">
+          <div class="icon">🏃</div>
+          <h3>Active Tasks</h3>
+          <p><strong>Total:</strong> {{ active_total }}</p>
+          <p>Easy: {{ active_counts.easy }} | Medium: {{ active_counts.medium }} | Hard: {{ active_counts.hard }}</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -37,6 +37,19 @@ body {
   font-size: 1rem;
 }
 
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* adjust spacing */
+}
+
+.progress-link {
+  text-decoration: none;
+  color: #4A90E2;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
 .logout-btn {
   background: #e74c3c;
   color: white;

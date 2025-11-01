@@ -9,28 +9,25 @@ body {
   background: linear-gradient(135deg, #D5F3FF, #4A90E2);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding-top: 40px;
+  align-items: center;
+  height: 100vh;
 }
 
 .dashboard {
   background: #fff;
   width: 90%;
-  max-width: 1200px;
+  max-width: 1500px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  padding: 40px 50px;
-  min-height: 70vh; /* ⬅️ Taller container */
-  display: flex;
-  flex-direction: column;
+  padding: 30px 40px;
+  min-height: 700px;
 }
 
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .home-link {
@@ -40,14 +37,40 @@ body {
   font-size: 1rem;
 }
 
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.progress-link {
+  text-decoration: none;
+  color: #4A90E2;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.logout-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background: #c0392b;
+}
+
 .content {
   text-align: center;
-  flex: 1;
 }
 
 .content h2 {
   color: #2c3e50;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .content p {
@@ -58,7 +81,7 @@ body {
 .duration-options {
   display: flex;
   justify-content: center;
-  gap: 25px;
+  gap: 20px;
   flex-wrap: wrap;
   margin-bottom: 40px;
 }
@@ -100,6 +123,8 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s;
+  display: block;
+  margin: 0 auto;
 }
 
 .next-btn:hover {

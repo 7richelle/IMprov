@@ -11,6 +11,15 @@
   <div class="dashboard">
     <header class="top-bar">
       <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+
+      <div class="right-buttons">
+        <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
+        <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
+        <form action="{% url 'login' %}" method="post" class="logout-form">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
     </header>
 
     <main class="content">
@@ -39,7 +48,7 @@
         </label>
       </div>
 
-      <button onclick="generateTask()" class="next-btn">Generate Task </button>
+      <button onclick="generateTask()" class="next-btn">Generate Task</button>
 
       <div id="output"></div>
     </main>
@@ -51,13 +60,14 @@
       const difficulty = "{{ request.GET.difficulty }}";
       const frequency = "{{ request.GET.frequency }}";
       const durationInput = document.querySelector('input[name="duration"]:checked');
+
       if (!durationInput) {
         document.getElementById("output").innerHTML = "⚠️ Please select a duration.";
         return;
       }
+
       const duration = durationInput.value;
       const email = "{{ user_email }}";
-
       document.getElementById("output").innerHTML = "⏳ Generating task...";
 
       try {
@@ -70,10 +80,7 @@
         const data = await res.json();
         if (data.success) {
           const task = encodeURIComponent(data.generated_task);
-          //changed
           window.location.href = `/result/?task=${task}&duration=${duration}&task_id=${data.task_id}`;
-
-
         } else {
           document.getElementById("output").innerHTML =
             `❌ Error: ${data.error || "Could not generate task"}`;

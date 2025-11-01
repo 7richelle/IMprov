@@ -9,19 +9,18 @@ body {
   background: linear-gradient(135deg, #D5F3FF, #4A90E2);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding-top: 40px;
+  align-items: center;
+  height: 100vh;
 }
 
 .dashboard {
   background: #fff;
   width: 90%;
-  max-width: 1200px;
+  max-width: 1500px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  padding: 40px 50px;
-  min-height: 70vh; /* ⬅️ taller consistent height */
+  padding: 30px 40px;
+  min-height: 700px;
   display: flex;
   flex-direction: column;
 }
@@ -30,7 +29,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .home-link {
@@ -40,6 +39,33 @@ body {
   font-size: 1rem;
 }
 
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.progress-link {
+  text-decoration: none;
+  color: #4A90E2;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.logout-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background: #c0392b;
+}
+
 .content {
   text-align: center;
   flex: 1;
@@ -47,12 +73,13 @@ body {
 
 .content h2 {
   color: #2c3e50;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .content p {
   color: #555;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  font-size: 1rem;
 }
 
 .frequency-options {
@@ -60,49 +87,56 @@ body {
   justify-content: center;
   gap: 25px;
   flex-wrap: wrap;
-  margin-bottom: 40px;
 }
 
-.frequency-btn {
+.option-card {
+  flex: 1;
   border: 2px solid #ddd;
   border-radius: 10px;
-  padding: 25px 35px;
   cursor: pointer;
   transition: all 0.3s;
-  flex: 1;
-  max-width: 280px;
-  text-align: center;
+  max-width: 350px;
 }
 
-.frequency-btn input {
+.option-card input {
   display: none;
 }
 
-.frequency-btn span {
-  font-size: 1.2rem;
-  color: #333;
-  font-weight: 600;
+.option-content {
+  padding: 25px;
+  text-align: center;
 }
 
-.frequency-btn small {
-  display: block;
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 4px;
+.option-content .icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
 }
 
-.frequency-btn:hover,
-.frequency-btn input:checked + span {
+.option-card:hover,
+.option-card input:checked + .option-content {
   border-color: #4A90E2;
   background: #f0f8ff;
 }
 
+.option-content h3 {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.option-content p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
 .next-btn {
+  display: block;
+  margin: 50px auto 0 auto;
   background: #50E3C2;
-  color: white;
   border: none;
+  color: white;
+  padding: 12px 24px;
   border-radius: 8px;
-  padding: 14px 30px;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;

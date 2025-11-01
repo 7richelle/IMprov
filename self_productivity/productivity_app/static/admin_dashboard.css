@@ -1,0 +1,45 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f4f6f8;
+  color: #333;
+  padding: 40px;
+}
+
+.admin-container {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  color: #007bff;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.user-table th, .user-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.user-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn.promote { background-color: #28a745; color: white; }
+.btn.remove { background-color: #ffc107; color: white; }
+.btn.delete { background-color: #dc3545; color: white; }

@@ -82,9 +82,16 @@ def login_user(request):
                 request.session["user_email"] = user["email"]
                 request.session["user_name"] = user["name"]
                 request.session["user_id"] = user["user_id"]
+                #ADMIN
+                request.session["is_staff"] = user.get("is_staff", False)
+                request.session["is_superuser"] = user.get("is_superuser", False)
 
                 messages.success(request, f"Welcome back, {user['name']}!")
-                return redirect("task_dashboard")
+
+                if user.get("is_superuser") or user.get("is_staff"):
+                    return redirect("admin_dashboard")
+                else:
+                    return redirect("task_dashboard")
             else:
                 #  Wrong password
                 messages.error(request, "Incorrect password. Please try again.")
@@ -455,6 +462,81 @@ def reset_password(request):
 
     return render(request, "reset_password.html", {"form": form})
 
+#ADDED
+def user_progress(request):
+    #  Ensure user is logged in (via Supabase session)
+    if "user_id" not in request.session:
+        messages.warning(request, "Please log in first.")
+        return redirect("login")
+
+    user_id = request.session["user_id"]
+    user_name = request.session.get("user_name", "User")
+
+    #  Fetch this user’s tasks from Supabase
+    response = supabase.table("task").select("task_type, difficulty").eq("user_id", user_id).execute()
+    user_tasks = response.data or []
+
+    #  Count totals
+    total_tasks = len(user_tasks)
+    stationary_counts = {"easy": 0, "medium": 0, "hard": 0}
+    active_counts = {"easy": 0, "medium": 0, "hard": 0}
+
+    for task in user_tasks:
+        task_type = task.get("task_type", "").lower()
+        difficulty = task.get("difficulty", "").lower()
+
+        if task_type == "stationary" and difficulty in stationary_counts:
+            stationary_counts[difficulty] += 1
+        elif task_type == "active" and difficulty in active_counts:
+            active_counts[difficulty] += 1
+
+    stationary_total = sum(stationary_counts.values())
+    active_total = sum(active_counts.values())
+
+    #  Pass data to template
+    context = {
+        "user_name": user_name,
+        "total_tasks": total_tasks,
+        "stationary_total": stationary_total,
+        "stationary_counts": stationary_counts,
+        "active_total": active_total,
+        "active_counts": active_counts,
+    }
+
+    return render(request, "user_progress.html", context)
 
 
+#ADMIN
+def admin_dashboard(request):
+    # 🛑 Check admin access
+    if not request.session.get("is_staff") and not request.session.get("is_superuser"):
+        messages.error(request, "Access denied.")
+        return redirect("task_dashboard")
+
+    # --- Handle Admin Actions (POST requests) ---
+    if request.method == "POST":
+        action = request.POST.get("action")
+        user_id = request.POST.get("user_id")
+
+        if action and user_id:
+            if action == "delete":
+                supabase.table("user").delete().eq("user_id", user_id).execute()
+                messages.success(request, "User deleted successfully.")
+            elif action == "make_admin":
+                supabase.table("user").update({"is_staff": True, "is_superuser": True}).eq("user_id", user_id).execute()
+                messages.success(request, "User promoted to Admin.")
+            elif action == "remove_admin":
+                supabase.table("user").update({"is_staff": False, "is_superuser": False}).eq("user_id", user_id).execute()
+                messages.success(request, "Admin role removed.")
+            return redirect("admin_dashboard")
+
+    # --- Fetch All Users ---
+    response = supabase.table("user").select("user_id, name, email, is_active, is_staff, is_superuser").execute()
+    users = response.data or []
+
+    context = {"users": users}
+    return render(request, "admin_dashboard.html", context)
+
+def profile_user(request):
+    return render(request, "profile_user.html")
 
