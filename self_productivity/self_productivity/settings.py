@@ -15,6 +15,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url  # ADD THIS
+from supabase import create_client, Client  # <-- add this
 # Load .env only when not on Render (local dev)
 if os.environ.get("RENDER", "") != "true":
     load_dotenv()
@@ -24,6 +25,11 @@ if os.environ.get("RENDER", "") != "true":
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+#FOR DELETE USERS FOR ADMIN WAPAY LABOT
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
+
+#kutob diri
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -88,7 +94,10 @@ WSGI_APPLICATION = 'self_productivity.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+#FINAL FOR RENDER DATABASE WORK
 # --- DATABASE (Supabase Postgres) ---
+""" 
 if os.getenv("RENDER"):
     # ✅ Use SQLite while deployed on Render (avoids Supabase connection issue)
     DATABASES = {
@@ -107,7 +116,27 @@ else:
             ssl_require=True
         )
     }
-
+"""
+#FOR LOCALHOST WAY LABOT SA PAG COMMIT
+# --- DATABASE CONFIGURATION ---
+if os.environ.get("RENDER", "") == "true":
+    # ✅ On Render → use Supabase Postgres
+    DATABASE_URL = os.environ.get("DATABASE_URL")
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # ✅ On localhost → use SQLite (easier for UI testing)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
