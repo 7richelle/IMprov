@@ -23,9 +23,10 @@ from django.contrib.auth.hashers import make_password, check_password  # ✅ ADD
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
+#ADDED FOR ADMIN
+supabase_admin = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)  # use for delete
 
 #  REGISTER FUNCTION
 def register(request):
@@ -506,7 +507,8 @@ def user_progress(request):
     return render(request, "user_progress.html", context)
 
 
-#ADMIN
+# ADMIN
+# ADMIN
 def admin_dashboard(request):
     # 🛑 Check admin access
     if not request.session.get("is_staff") and not request.session.get("is_superuser"):
@@ -519,23 +521,36 @@ def admin_dashboard(request):
         user_id = request.POST.get("user_id")
 
         if action and user_id:
+            try:
+                user_id_val = int(user_id)
+            except ValueError:
+                user_id_val = user_id
+
             if action == "delete":
-                supabase.table("user").delete().eq("user_id", user_id).execute()
-                messages.success(request, "User deleted successfully.")
+                print("Deleting user:", user_id_val)
+                result = supabase_admin.table("user").delete().eq("user_id", user_id_val).execute()
+                if result.data:
+                    messages.success(request, f"✅ User {user_id_val} deleted successfully.")
+                else:
+                    messages.error(request, "⚠️ No user deleted. Check your Supabase service key or table RLS.")
+
             elif action == "make_admin":
-                supabase.table("user").update({"is_staff": True, "is_superuser": True}).eq("user_id", user_id).execute()
+                supabase_admin.table("user").update({"is_staff": True, "is_superuser": True}).eq("user_id", user_id_val).execute()
                 messages.success(request, "User promoted to Admin.")
+
             elif action == "remove_admin":
-                supabase.table("user").update({"is_staff": False, "is_superuser": False}).eq("user_id", user_id).execute()
+                supabase_admin.table("user").update({"is_staff": False, "is_superuser": False}).eq("user_id", user_id_val).execute()
                 messages.success(request, "Admin role removed.")
+
             return redirect("admin_dashboard")
 
-    # --- Fetch All Users ---
+    # --- Fetch All Users (anon key is fine for read-only) ---
     response = supabase.table("user").select("user_id, name, email, is_active, is_staff, is_superuser").execute()
     users = response.data or []
 
     context = {"users": users}
     return render(request, "admin_dashboard.html", context)
+
 
 def profile_user(request):
     return render(request, "profile_user.html")
