@@ -7,64 +7,88 @@
     <link rel="stylesheet" href="{% static 'admin_dashboard.css' %}">
 </head>
 <body>
-    <div class="admin-container">
-        <h1>👑 Admin Dashboard</h1>
-        <p>Manage all registered users from the system.</p>
+  <div class="dashboard">
+    <header class="top-bar">
+      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+      <div class="right-buttons">
+        <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
+        <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
+        <form action="{% url 'login' %}" method="post" class="logout-form">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="admin-container">
+        <h1>Admin Dashboard</h1>
+        <p>Manage all registered users in the system.</p>
 
         {% if messages %}
         <div class="messages">
-            {% for message in messages %}
-                <p class="alert">{{ message }}</p>
-            {% endfor %}
+          {% for message in messages %}
+            <p class="alert">{{ message }}</p>
+          {% endfor %}
         </div>
         {% endif %}
 
-        <table class="user-table">
+        <div class="table-wrapper">
+          <table class="user-table">
             <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Active</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
+              <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user.user_id }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.is_active }}</td>
-                    <td>
-                        {% if user.is_superuser or user.is_staff %}
-                            Admin
-                        {% else %}
-                            User
-                        {% endif %}
-                    </td>
-                    <td>
-                        <form method="POST" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                            {% if user.is_superuser or user.is_staff %}
-                                <button type="submit" name="action" value="remove_admin" class="btn remove">Remove Admin</button>
-                            {% else %}
-                                <button type="submit" name="action" value="make_admin" class="btn promote">Make Admin</button>
-                            {% endif %}
-                        </form>
+              {% for user in users %}
+              <tr>
+                <td>{{ user.user_id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                  {% if user.is_active %}
+                    <span class="badge active">Active</span>
+                  {% else %}
+                    <span class="badge inactive">Inactive</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if user.is_superuser or user.is_staff %}
+                    <span class="badge admin">Admin</span>
+                  {% else %}
+                    <span class="badge user">User</span>
+                  {% endif %}
+                </td>
+                <td class="actions">
+                  <form method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                    {% if user.is_superuser or user.is_staff %}
+                      <button type="submit" name="action" value="remove_admin" class="btn remove">Remove Admin</button>
+                    {% else %}
+                      <button type="submit" name="action" value="make_admin" class="btn promote">Make Admin</button>
+                    {% endif %}
+                  </form>
 
-                        <form method="POST" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                            <button type="submit" name="action" value="delete" class="btn delete">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
+                  <form method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                    <button type="submit" name="action" value="delete" class="btn delete">Delete</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
             </tbody>
-        </table>
-    </div>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
 </body>
 </html>
