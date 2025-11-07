@@ -25,4 +25,7 @@ urlpatterns = [
     path("admin_dashboard/", views.admin_dashboard, name="admin_dashboard"),
     path("user_progress/", views.user_progress, name="user_progress"),
     path("profile_user/", views.profile_user, name="profile_user"),
+    path("admin_profile/", views.admin_profile, name="admin_profile"),
+    path("task_summary/", views.task_summary, name="task_summary"),
+    
 ]

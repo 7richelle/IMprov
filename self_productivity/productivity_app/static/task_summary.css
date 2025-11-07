@@ -139,3 +139,16 @@ body {
   display: inline-block;
   margin-top: 10px;
 }
+
+.progress-link {
+  text-decoration: none;
+  color: #4A90E2;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.progress-link.active {
+  color: #2c3e50;
+  border-bottom: 2px solid #4A90E2;
+}

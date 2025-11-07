@@ -89,6 +89,8 @@ WSGI_APPLICATION = 'self_productivity.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 # --- DATABASE (Supabase Postgres) ---
+
+#MAO NI ANG SA RENDER, FINAL IMPLEMENT NI
 if os.getenv("RENDER"):
     # ✅ Use SQLite while deployed on Render (avoids Supabase connection issue)
     DATABASES = {
@@ -106,9 +108,31 @@ else:
             conn_max_age=600,
             ssl_require=True
         )
+    } 
+    #diri kutob ang final
+
+#FOR LOCALHOST WAY LABOT SA PAG COMMIT 
+# --- DATABASE CONFIGURATION ---
+"""
+if os.environ.get("RENDER", "") == "true":
+    # ✅ On Render → use Supabase Postgres
+    DATABASE_URL = os.environ.get("DATABASE_URL")
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
-
-
+else:
+    # ✅ On localhost → use SQLite (easier for UI testing)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+"""
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -168,9 +192,28 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
+#RENDER IS THIS CODE FINAL
+# RENDER FINAL FOR THIS
 # --- SECURITY SETTINGS FOR RENDER ---
 if os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "True").lower() == "true":
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+"""
+#DILI MAO, FOR LOCALHOST ONLY KANI
+# SECURITY SETTINGS FOR RENDER (Production Only)
+if os.environ.get("RENDER", "") == "true":
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+else:
+    # Local dev: no SSL redirect
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+"""
+# ADDED
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

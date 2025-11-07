@@ -9,24 +9,36 @@
 </head>
 <body>
   <div class="dashboard">
+    <!-- Top Navigation Bar -->
     <header class="top-bar">
       <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+
+      <div class="right-buttons">
+        <a href="{% url 'task_summary' %}" class="progress-link">Summary</a>
+        <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
+        <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
+        <form action="{% url 'login' %}" method="post" class="logout-form">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
     </header>
 
+    <!-- Main Content -->
     <main class="content">
-      <h2>Your Task is Ready!</h2>
-      <p>Here’s the task generated for you:</p>
+      <div class="summary-card">
+        <h2>Your Task is Ready!</h2>
+        <p class="footer">Here’s the task generated for you:</p>
 
-      <div class="task-box">
-        <p>{{ generated_task }}</p>
+        <div class="task-box">
+          <p>{{ generated_task }}</p>
+        </div>
+
+        <a href="{% url 'task_timer' %}?task_id={{ task_id }}&duration={{ duration }}&task={{ generated_task|urlencode }}" 
+           class="btn next-btn">
+          ⏱ Timer
+        </a>
       </div>
-
-    
-<a href="{% url 'task_timer' %}?task_id={{ task_id }}&duration={{ duration }}&task={{ generated_task|urlencode }}" 
-   class="next-btn">
-  Go to Timer
-</a>
-
     </main>
   </div>
 </body>

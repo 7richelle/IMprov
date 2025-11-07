@@ -98,7 +98,7 @@ def login_user(request):
                 return render(request, "login.html")
         else:
             #  No user found
-            messages.error(request, "Email not registered.")
+            #messages.error(request, "Email not registered.")
             return render(request, "login.html")
 
     # Default (GET request)
@@ -540,3 +540,101 @@ def admin_dashboard(request):
 def profile_user(request):
     return render(request, "profile_user.html")
 
+
+#Profle added
+import os
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+def profile_user(request):
+    # Ensure user is logged in
+    if "user_email" not in request.session:
+        messages.warning(request, "Please log in first.")
+        return redirect("login")
+
+    user_name = request.session.get("user_name")
+    user_email = request.session.get("user_email")
+
+    if request.method == 'POST' and 'image' in request.FILES:
+        image_file = request.FILES['image']
+
+        # Ensure the directory exists
+        save_dir = os.path.join(settings.MEDIA_ROOT, "profile_pics")
+        os.makedirs(save_dir, exist_ok=True)  # ✅ creates folder if it doesn't exist
+
+        # Sanitize filename (optional: remove spaces, etc.)
+        filename = image_file.name.replace(" ", "_")
+
+        # Full path to save
+        file_path = os.path.join("profile_pics", filename)
+        full_path = os.path.join(settings.MEDIA_ROOT, file_path)
+
+        # Save uploaded file
+        with open(full_path, "wb+") as f:
+            for chunk in image_file.chunks():
+                f.write(chunk)
+
+        # Save path in session (or database if persistent storage needed)
+        request.session['profile_image'] = file_path
+        return redirect('profile_user')
+
+    # Show profile image (default if not uploaded)
+    profile_image = request.session.get('profile_image', 'default_profile.png')
+
+    context = {
+        "user_name": user_name,
+        "user_email": user_email,
+        "profile_image": profile_image,
+    }
+    return render(request, "profile_user.html", context)
+
+
+def admin_profile(request):
+    # Ensure user is logged in
+    if "user_email" not in request.session:
+        messages.warning(request, "Please log in first.")
+        return redirect("login")
+
+    user_name = request.session.get("user_name")
+    user_email = request.session.get("user_email")
+
+    if request.method == 'POST' and 'image' in request.FILES:
+        image_file = request.FILES['image']
+
+        # Ensure the directory exists
+        save_dir = os.path.join(settings.MEDIA_ROOT, "profile_pics")
+        os.makedirs(save_dir, exist_ok=True)  # ✅ creates folder if it doesn't exist
+
+        # Sanitize filename (optional: remove spaces, etc.)
+        filename = image_file.name.replace(" ", "_")
+
+        # Full path to save
+        file_path = os.path.join("profile_pics", filename)
+        full_path = os.path.join(settings.MEDIA_ROOT, file_path)
+
+        # Save uploaded file
+        with open(full_path, "wb+") as f:
+            for chunk in image_file.chunks():
+                f.write(chunk)
+
+        # Save path in session (or database if persistent storage needed)
+        request.session['profile_image'] = file_path
+        return redirect('admin_profile')
+
+    # Show profile image (default if not uploaded)
+    profile_image = request.session.get('profile_image', 'default_profile.png')
+
+    context = {
+        "user_name": user_name,
+        "user_email": user_email,
+        "profile_image": profile_image,
+    }
+    return render(request, "admin_profile.html", context)
+
+#CHANGED
+from django.shortcuts import render
+
+def task_summary(request):
+    task = request.GET.get("task", "No task description available.")
+    return render(request, "task_summary.html", {"task": task})

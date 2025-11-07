@@ -13,7 +13,8 @@
       <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
 
       <div class="right-buttons">
-        <a href ="{% url 'user_progress' %}" class="progress-link">Progress</a>
+        <a href="{% url 'task_summary' %}" class="progress-link">Summary</a>
+        <a href ="{% url 'user_progress' %}" class="progress-link active">Progress</a>
          <a href ="{% url 'profile_user' %}" class="progress-link">Profile</a>
         <form action="{% url 'login' %}" method="post" class="logout-form">
           {% csrf_token %}

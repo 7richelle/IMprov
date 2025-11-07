@@ -5,16 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="{% static 'profile_user.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_profile.css' %}">
 </head>
 <body>
   <div class="dashboard">
     <header class="top-bar">
-      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+      <a href="{% url 'admin_dashboard' %}" class="home-link">🏠 Home</a>
       <div class="right-buttons">
-        <a href="{% url 'task_summary' %}" class="progress-link">Summary</a>
-        <a href="{% url 'user_progress' %}" class="progress-link ">Progress</a>
-        <a href="{% url 'profile_user' %}" class="progress-link active">Profile</a>
+        
+        <a href="{% url 'admin_profile' %}" class="progress-link active">Profile</a>
         <form action="{% url 'login' %}" method="post" class="logout-form">
           {% csrf_token %}
           <button type="submit" class="logout-btn">Logout</button>
@@ -30,7 +29,7 @@
           {% if profile_image and profile_image != 'default_profile.png' %}
               <img src="/media/{{ profile_image }}" alt="Profile Picture" id="profile-img">
           {% else %}
-              <img src="{% static 'profile.jpg' %}" alt="Default Profile" id="profile-img">
+              <img src="{% static 'default_profile.png' %}" alt="Default Profile" id="profile-img">
           {% endif %}
 
           <form method="POST" enctype="multipart/form-data" class="upload-form">

@@ -9,10 +9,10 @@
 <body>
   <div class="dashboard">
     <header class="top-bar">
-      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+      <a href="{% url 'admin_dashboard' %}" class="home-link">🏠 Home</a>
       <div class="right-buttons">
-        <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
-        <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
+        
+        <a href="{% url 'admin_profile' %}" class="progress-link">Profile</a>
         <form action="{% url 'login' %}" method="post" class="logout-form">
           {% csrf_token %}
           <button type="submit" class="logout-btn">Logout</button>

@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Summary</title>
+  <link rel="stylesheet" href="{% static 'task_summary.css' %}">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Top Navigation Bar -->
+    <header class="top-bar">
+      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
+
+      <div class="right-buttons">
+        <a href="{% url 'task_summary' %}" class="progress-link active">Summary</a>
+        <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
+        <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
+        <form action="{% url 'login' %}" method="post" class="logout-form">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+      <div class="summary-card">
+        <h2>🎯 Task Completed!</h2>
+        <p class="footer">Here’s what you just accomplished:</p>
+
+        <div class="task-box" id="taskDescription">
+          Loading your task...
+        </div>
+
+        <a href="{% url 'task_dashboard' %}" class="btn next-btn">⬅ Back to Dashboard</a>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const task = params.get("task");
+    const desc = document.getElementById("taskDescription");
+
+    if (task) {
+      const decoded = decodeURIComponent(task)
+        .replace(/&#x27;/g, "'")
+        .replace(/&quot;/g, '"')
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">");
+
+      desc.textContent = decoded;
+    } else {
+      desc.textContent = "No task description available.";
+    }
+  </script>
+</body>
+</html>
