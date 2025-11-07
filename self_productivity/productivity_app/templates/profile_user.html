@@ -28,10 +28,10 @@
       <div class="profile-section">
         <div class="profile-picture">
           {% if profile_image and profile_image != 'default_profile.png' %}
-              <img src="/media/{{ profile_image }}" alt="Profile Picture" id="profile-img">
-          {% else %}
-              <img src="{% static 'profile.jpg' %}" alt="Default Profile" id="profile-img">
-          {% endif %}
+    <img src="{{ MEDIA_URL }}{{ profile_image }}" alt="Profile Picture" id="profile-img">
+{% else %}
+    <img src="{% static 'images/profile.jpg' %}" alt="Default Profile" id="profile-img">
+{% endif %}
 
           <form method="POST" enctype="multipart/form-data" class="upload-form">
             {% csrf_token %}
