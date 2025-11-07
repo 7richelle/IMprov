@@ -586,6 +586,7 @@ def profile_user(request):
         "user_name": user_name,
         "user_email": user_email,
         "profile_image": profile_image,
+        "MEDIA_URL": settings.MEDIA_URL,  #  add this
     }
     return render(request, "profile_user.html", context)
 
