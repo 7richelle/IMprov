@@ -507,35 +507,58 @@ def user_progress(request):
 
 
 #ADMIN
+
+from django.conf import settings
+
+# ✅ Create Supabase client
+supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+
 def admin_dashboard(request):
-    # 🛑 Check admin access
+    # 🛑 Only staff or superuser can access
     if not request.session.get("is_staff") and not request.session.get("is_superuser"):
         messages.error(request, "Access denied.")
         return redirect("task_dashboard")
 
-    # --- Handle Admin Actions (POST requests) ---
+    # --- Handle Admin Actions ---
     if request.method == "POST":
         action = request.POST.get("action")
         user_id = request.POST.get("user_id")
 
         if action and user_id:
-            if action == "delete":
-                supabase.table("user").delete().eq("user_id", user_id).execute()
-                messages.success(request, "User deleted successfully.")
-            elif action == "make_admin":
-                supabase.table("user").update({"is_staff": True, "is_superuser": True}).eq("user_id", user_id).execute()
-                messages.success(request, "User promoted to Admin.")
-            elif action == "remove_admin":
-                supabase.table("user").update({"is_staff": False, "is_superuser": False}).eq("user_id", user_id).execute()
-                messages.success(request, "Admin role removed.")
+            # Prevent self-deletion
+            if str(request.session.get("user_id")) == str(user_id):
+                messages.error(request, "You cannot delete your own account.")
+            else:
+                if action == "delete":
+                    # ✅ Delete user by user_id
+                    supabase.table("user").delete().eq("user_id", user_id).execute()
+                    messages.success(request, "User deleted successfully.")
+
+                elif action == "make_admin":
+                    supabase.table("user").update({
+                        "is_staff": True,
+                        "is_superuser": True
+                    }).eq("user_id", user_id).execute()
+                    messages.success(request, "User promoted to Admin.")
+
+                elif action == "remove_admin":
+                    supabase.table("user").update({
+                        "is_staff": False,
+                        "is_superuser": False
+                    }).eq("user_id", user_id).execute()
+                    messages.success(request, "Admin role removed.")
+
             return redirect("admin_dashboard")
 
     # --- Fetch All Users ---
-    response = supabase.table("user").select("user_id, name, email, is_active, is_staff, is_superuser").execute()
-    users = response.data or []
+    response = supabase.table("user").select(
+        "user_id, name, email, is_active, is_staff, is_superuser"
+    ).execute()
 
+    users = response.data or []
     context = {"users": users}
     return render(request, "admin_dashboard.html", context)
+
 
 def profile_user(request):
     return render(request, "profile_user.html")
