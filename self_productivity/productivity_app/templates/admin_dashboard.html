@@ -8,17 +8,20 @@
 </head>
 <body>
   <div class="dashboard">
-    <header class="top-bar">
-      <a href="{% url 'admin_dashboard' %}" class="home-link">🏠 Home</a>
-      <div class="right-buttons">
-        
-        <a href="{% url 'admin_profile' %}" class="progress-link">Profile</a>
-        <form action="{% url 'login' %}" method="post" class="logout-form">
-          {% csrf_token %}
-          <button type="submit" class="logout-btn">Logout</button>
-        </form>
-      </div>
-    </header>
+<header class="top-bar premium-header">
+  <div class="left-side">
+    <span class="logo">✨</span>
+    <a href="{% url 'admin_dashboard' %}" class="nav-btn">Home</a>
+  </div>
+
+  <nav class="nav-menu">
+    <a href="{% url 'admin_profile' %}" class="nav-item">Profile</a>
+    <form action="{% url 'login' %}" method="post" class="logout-form">
+      {% csrf_token %}
+      <button type="submit" class="nav-item logout-btn">Logout</button>
+    </form>
+  </nav>
+</header>
 
     <main class="content">
       <div class="admin-container">

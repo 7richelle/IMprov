@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Select Frequency</title>
-  <link rel="stylesheet" href="{% static 'task_frequency.css' %}">
+  <link rel="stylesheet" href="{% static 'task_dashboard.css' %}">
 </head>
 <body>
   <div class="dashboard">
@@ -13,6 +13,7 @@
       <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
 
       <div class="right-buttons">
+        <a href="{% url 'leaderboard' %}" class="progress-link">Leaderboard</a>
         <a href="{% url 'task_summary' %}" class="progress-link">Summary</a>
         <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
         <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
@@ -24,35 +25,37 @@
       </div>
     </header>
 
-    <main class="content">
-      <h2>📅 Task Frequency</h2>
-      <p>How often would you like to do this task?</p>
-
+    <main class="task-container">
       <form action="{% url 'task_duration' %}" method="get" class="task-form">
         <input type="hidden" name="type" value="{{ request.GET.type }}">
         <input type="hidden" name="difficulty" value="{{ request.GET.difficulty }}">
 
-        <div class="frequency-options">
-          <label class="option-card">
-            <input type="radio" name="frequency" value="today" required>
-            <div class="option-content">
-             
-              <h3>Only for Today</h3>
-              <p>Just one quick task for the day.</p>
-            </div>
-          </label>
+        <section class="task-section">
+          <h2>📅 Task Frequency</h2>
+          <p>How often would you like to do this task?</p>
 
-          <label class="option-card">
-            <input type="radio" name="frequency" value="daily">
-            <div class="option-content">
-              
-              <h3>Everyday for a Week</h3>
-              <p>Build consistency with a daily habit.</p>
-            </div>
-          </label>
-        </div>
+          <div class="task-type">
+            <label class="option-card">
+              <input type="radio" name="frequency" value="today" required>
+              <div class="option-content">
+                <div class="icon">☀️</div>
+                <h3>Only for Today</h3>
+                <p>Just one quick task for the day.</p>
+              </div>
+            </label>
 
-        <button type="submit" class="next-btn">Next</button>
+            <label class="option-card">
+              <input type="radio" name="frequency" value="daily">
+              <div class="option-content">
+                <div class="icon">📆</div>
+                <h3>Everyday for a Week</h3>
+                <p>Build consistency with a daily habit.</p>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <button type="submit" class="next-btn">Next →</button>
       </form>
     </main>
   </div>

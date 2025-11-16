@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="{% static 'leaderboard.css' %}">
+</head>
+<body>
+
+  <div class="dashboard">
+
+    <!-- TOP NAVIGATION -->
+<header class="top-bar premium-header">
+  <div class="left-side">
+    <span class="logo">✨</span>
+    <a href="{% url 'task_dashboard' %}" class="nav-btn">Home</a>
+  </div>
+
+  <nav class="nav-menu">
+    <a href="{% url 'leaderboard' %}" class="nav-item active">Leaderboard</a>
+        <a href="{% url 'task_summary' %}" class="nav-item">Summary</a>
+        <a href="{% url 'user_progress' %}" class="nav-item">Progress</a>
+    <a href="{% url 'profile_user' %}" class="nav-item">Profile</a>
+          <form action="{% url 'login' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+  </nav>
+</header>
+
+
+    <main class="leaderboard-container">
+      <h1 class="title">🏆Leaderboard</h1>
+
+      {% if leaderboard %}
+      <div class="pyramid-container">
+
+        <!-- TOP 1 -->
+        {% if leaderboard|length >= 1 %}
+        {% with user=leaderboard.0 %}
+        <div class="pyramid-card top1 glow-gold">
+          <div class="shine"></div>
+         <!-- <img src="{% static 'icons/gold-medal.png' %}" class="medal-icon gold" />-->
+          <div class="rank-badge gold-bg">#1</div>
+          <p class="name">{{ user.name }}</p>
+          <p class="score">{{ user.completed }} tasks</p>
+        </div>
+        {% endwith %}
+        {% endif %}
+
+        <!-- TOP 2 AND 3 -->
+        <div class="second-row">
+
+          {% if leaderboard|length >= 2 %}
+          {% with user=leaderboard.1 %}
+          <div class="pyramid-card top2 glow-silver">
+           <!-- <img src="{% static 'icons/silver-medal.png' %}" class="medal-icon silver" />-->
+            <div class="rank-badge silver-bg">#2</div>
+            <p class="name">{{ user.name }}</p>
+            <p class="score">{{ user.completed }} tasks</p>
+          </div>
+          {% endwith %}
+          {% endif %}
+
+          {% if leaderboard|length >= 3 %}
+          {% with user=leaderboard.2 %}
+          <div class="pyramid-card top3 glow-bronze">
+            <!--<img src="{% static 'icons/bronze-medal.png' %}" class="medal-icon bronze" />-->
+            <div class="rank-badge bronze-bg">#3</div>
+            <p class="name">{{ user.name }}</p>
+            <p class="score">{{ user.completed }} tasks</p>
+          </div>
+          {% endwith %}
+          {% endif %}
+
+        </div>
+
+        <!-- THE REST -->
+        <div class="rest-container">
+          {% for user in leaderboard|slice:"3:" %}
+          <div class="rest-card fade-up">
+            <span class="rank-num">#{{ forloop.counter|add:3 }}</span>
+            <span class="rest-name">{{ user.name }}</span>
+            <span class="rest-score">{{ user.completed }} tasks</span>
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
+      {% else %}
+      <p class="no-data">No completed tasks yet 😅</p>
+      {% endif %}
+    </main>
+
+  </div>
+
+</body>
+</html>

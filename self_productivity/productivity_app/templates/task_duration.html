@@ -13,9 +13,11 @@
       <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
 
       <div class="right-buttons">
+        <a href="{% url 'leaderboard' %}" class="progress-link">Leaderboard</a>
         <a href="{% url 'task_summary' %}" class="progress-link">Summary</a>
         <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
         <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
+
         <form action="{% url 'login' %}" method="post" class="logout-form">
           {% csrf_token %}
           <button type="submit" class="logout-btn">Logout</button>
@@ -23,35 +25,39 @@
       </div>
     </header>
 
-    <main class="content">
-      <h2>⏱ Task Duration</h2>
-      <p>How long do you want to spend on your task?</p>
+    <main class="task-container">
+      <form onsubmit="event.preventDefault(); generateTask();" class="task-form">
+        <section class="task-section">
+          <h2>⏱ Task Duration</h2>
+          <p>How long do you want to spend on your task?</p>
 
-      <div class="duration-options">
-        <label class="duration-btn">
-          <input type="radio" name="duration" value="5min" required>
-          <span>5 mins</span>
-        </label>
+          <div class="difficulty">
+            <label class="difficulty-btn">
+              <input type="radio" name="duration" value="5min" required>
+              <span>5 mins<br><small>Quick boost</small></span>
+            </label>
 
-        <label class="duration-btn">
-          <input type="radio" name="duration" value="10min">
-          <span>10 mins</span>
-        </label>
+            <label class="difficulty-btn">
+              <input type="radio" name="duration" value="10min">
+              <span>10 mins<br><small>Short focus</small></span>
+            </label>
 
-        <label class="duration-btn">
-          <input type="radio" name="duration" value="30min">
-          <span>30 mins</span>
-        </label>
+            <label class="difficulty-btn">
+              <input type="radio" name="duration" value="30min">
+              <span>30 mins<br><small>Deep work</small></span>
+            </label>
 
-        <label class="duration-btn">
-          <input type="radio" name="duration" value="1hr">
-          <span>1 hour</span>
-        </label>
-      </div>
+            <label class="difficulty-btn">
+              <input type="radio" name="duration" value="1hr">
+              <span>1 hour<br><small>Power session</small></span>
+            </label>
+          </div>
+        </section>
 
-      <button onclick="generateTask()" class="next-btn">Generate Task</button>
+        <button type="submit" class="next-btn">Generate Task →</button>
+      </form>
 
-      <div id="output"></div>
+      <div id="output" style="margin-top:20px; font-weight:bold;"></div>
     </main>
   </div>
 

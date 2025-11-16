@@ -8,38 +8,47 @@
   <link rel="stylesheet" href="{% static 'task_result.css' %}">
 </head>
 <body>
-  <div class="dashboard">
-    <!-- Top Navigation Bar -->
-    <header class="top-bar">
-      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
 
-      <div class="right-buttons">
-        <a href="{% url 'task_summary' %}" class="progress-link">Summary</a>
-        <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
-        <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
-        <form action="{% url 'login' %}" method="post" class="logout-form">
-          {% csrf_token %}
-          <button type="submit" class="logout-btn">Logout</button>
-        </form>
+<div class="dashboard">
+
+  <!-- PREMIUM HEADER FROM LEADERBOARD -->
+  <header class="top-bar premium-header">
+    <div class="left-side">
+      <span class="logo">✨</span>
+      <a href="{% url 'task_dashboard' %}" class="nav-btn">Home</a>
+    </div>
+
+    <nav class="nav-menu">
+       <a href="{% url 'leaderboard' %}" class="nav-item">Leaderboard</a>
+      <a href="{% url 'task_summary' %}" class="nav-item">Summary</a>
+      <a href="{% url 'user_progress' %}" class="nav-item">Progress</a>
+      <a href="{% url 'profile_user' %}" class="nav-item">Profile</a>
+
+      <form action="{% url 'login' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <div class="summary-card premium-card">
+      <h2>Your Task is Ready!</h2>
+      <p class="footer">Here’s the task generated for you:</p>
+
+      <div class="task-box">
+        <p>{{ generated_task }}</p>
       </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="content">
-      <div class="summary-card">
-        <h2>Your Task is Ready!</h2>
-        <p class="footer">Here’s the task generated for you:</p>
+      <a href="{% url 'task_timer' %}?task_id={{ task_id }}&duration={{ duration }}&task={{ generated_task|urlencode }}" 
+         class="btn next-btn">
+        ⏱ Timer
+      </a>
+    </div>
+  </main>
 
-        <div class="task-box">
-          <p>{{ generated_task }}</p>
-        </div>
+</div>
 
-        <a href="{% url 'task_timer' %}?task_id={{ task_id }}&duration={{ duration }}&task={{ generated_task|urlencode }}" 
-           class="btn next-btn">
-          ⏱ Timer
-        </a>
-      </div>
-    </main>
-  </div>
 </body>
 </html>

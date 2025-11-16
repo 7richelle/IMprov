@@ -8,25 +8,31 @@
   <link rel="stylesheet" href="{% static 'task_summary.css' %}">
 </head>
 <body>
-  <div class="dashboard">
-    <!-- Top Navigation Bar -->
-    <header class="top-bar">
-      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
 
-      <div class="right-buttons">
-        <a href="{% url 'task_summary' %}" class="progress-link active">Summary</a>
-        <a href="{% url 'user_progress' %}" class="progress-link">Progress</a>
-        <a href="{% url 'profile_user' %}" class="progress-link">Profile</a>
+  <div class="dashboard">
+
+    <!-- PREMIUM HEADER (same as leaderboard) -->
+    <header class="top-bar premium-header">
+      <div class="left-side">
+        <span class="logo">✨</span>
+        <a href="{% url 'task_dashboard' %}" class="nav-btn">Home</a>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="{% url 'leaderboard' %}" class="nav-item">Leaderboard</a>
+        <a href="{% url 'task_summary' %}" class="nav-item active">Summary</a>
+        <a href="{% url 'user_progress' %}" class="nav-item">Progress</a>
+        <a href="{% url 'profile_user' %}" class="nav-item">Profile</a>
         <form action="{% url 'login' %}" method="post" class="logout-form">
           {% csrf_token %}
           <button type="submit" class="logout-btn">Logout</button>
         </form>
-      </div>
+      </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="content">
-      <div class="summary-card">
+    <!-- MAIN CONTENT -->
+    <main class="summary-container">
+      <div class="summary-card premium-card">
         <h2>🎯 Task Completed!</h2>
         <p class="footer">Here’s what you just accomplished:</p>
 
@@ -34,9 +40,10 @@
           Loading your task...
         </div>
 
-        <a href="{% url 'task_dashboard' %}" class="btn next-btn">⬅ Back to Dashboard</a>
+        <a href="{% url 'task_dashboard' %}" class="btn next-btn">Back to Dashboard</a>
       </div>
     </main>
+
   </div>
 
   <script>
@@ -57,5 +64,6 @@
       desc.textContent = "No task description available.";
     }
   </script>
+
 </body>
 </html>

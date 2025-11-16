@@ -7,42 +7,57 @@
     <title>{{ user_name }}'s Progress</title>
     <link rel="stylesheet" href="{% static 'user_progress.css' %}">
 </head>
+
 <body>
   <div class="dashboard">
-    <header class="top-bar">
-      <a href="{% url 'task_dashboard' %}" class="home-link">🏠 Home</a>
 
-      <div class="right-buttons">
-        <a href="{% url 'task_summary' %}" class="progress-link">Summary</a>
-        <a href ="{% url 'user_progress' %}" class="progress-link active">Progress</a>
-         <a href ="{% url 'profile_user' %}" class="progress-link">Profile</a>
-        <form action="{% url 'login' %}" method="post" class="logout-form">
-          {% csrf_token %}
-          <button type="submit" class="logout-btn">Logout</button>
-        </form>
-      </div>
-    </header>
+    <!-- TOP BAR (SAME DESIGN AS OTHERS) -->
+<header class="top-bar premium-header">
+  <div class="left-side">
+    <span class="logo">✨</span>
+    <a href="{% url 'task_dashboard' %}" class="nav-btn">Home</a>
+  </div>
 
-    <main class="content">
+  <nav class="nav-menu">
+    <a href="{% url 'leaderboard' %}" class="nav-item">Leaderboard</a>
+    <a href="{% url 'task_summary' %}" class="nav-item">Summary</a>
+    <a href="{% url 'user_progress' %}" class="nav-item active">Progress</a>
+    <a href="{% url 'profile_user' %}" class="nav-item">Profile</a>
+
+    <form action="{% url 'login' %}" method="post" class="logout-form">
+      {% csrf_token %}
+      <button type="submit" class="logout-btn">Logout</button>
+    </form>
+  </nav>
+</header>
+
+
+    <!-- PROGRESS CONTENT (MATCHES UI STYLE) -->
+    <main class="progress-content">
       <h2>{{ user_name }}’s Progress Overview</h2>
       <p class="total">Total Tasks Completed: <span>{{ total_tasks }}</span></p>
 
       <div class="progress-cards">
-        <div class="progress-card stationary">
+
+        <!-- Stationary Tasks Card -->
+        <div class="progress-card">
           <div class="icon">🪑</div>
           <h3>Stationary Tasks</h3>
           <p><strong>Total:</strong> {{ stationary_total }}</p>
-          <p>Easy: {{ stationary_counts.easy }} | Medium: {{ stationary_counts.medium }} | Hard: {{ stationary_counts.hard }}</p>
+          <p>Easy: {{ stationary_counts.easy }} <br> Medium: {{ stationary_counts.medium }} <br> Hard: {{ stationary_counts.hard }}</p>
         </div>
 
-        <div class="progress-card active">
+        <!-- Active Tasks Card -->
+        <div class="progress-card">
           <div class="icon">🏃</div>
           <h3>Active Tasks</h3>
           <p><strong>Total:</strong> {{ active_total }}</p>
-          <p>Easy: {{ active_counts.easy }} | Medium: {{ active_counts.medium }} | Hard: {{ active_counts.hard }}</p>
+          <p>Easy: {{ active_counts.easy }} <br> Medium: {{ active_counts.medium }} <br> Hard: {{ active_counts.hard }}</p>
         </div>
+
       </div>
     </main>
+
   </div>
 </body>
 </html>
