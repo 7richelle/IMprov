@@ -17,10 +17,6 @@ class Task(models.Model):
         ('medium', 'Medium'),
         ('hard', 'Hard'),
     ]
-    FREQUENCY_CHOICES = [
-        ('today', 'Today'),
-        ('daily_week', 'Daily for a Week'),
-    ]
     DURATION_CHOICES = [
         ('5min', '5 mins'),
         ('10min', '10 mins'),
@@ -36,7 +32,7 @@ class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     task_type = models.CharField(max_length=20, choices=TASK_TYPE_CHOICES)
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES)
-    frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
+   
     duration = models.CharField(max_length=20, choices=DURATION_CHOICES)
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')

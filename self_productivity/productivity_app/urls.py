@@ -11,7 +11,7 @@ urlpatterns = [
      path("login/", views.login_user, name="login"),
      path("dashboard/", views.task_dashboard, name="task_dashboard"),
      path("generate-task/", views.generate_task, name="generate_task"), 
-     path('frequency/', views.task_frequency, name='task_frequency'),
+ 
      path('duration/', views.task_duration, name='task_duration'),
      path('result/', views.task_result, name='task_result'),  
      path("start-task-session/", views.start_task_session, name="start_task_session"),
@@ -27,5 +27,6 @@ urlpatterns = [
     path("profile_user/", views.profile_user, name="profile_user"),
     path("admin_profile/", views.admin_profile, name="admin_profile"),
     path("task_summary/", views.task_summary, name="task_summary"),
-    
+    path("leaderboard/", views.leaderboard, name="leaderboard"),
+
 ]

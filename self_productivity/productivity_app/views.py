@@ -114,7 +114,7 @@ def generate_task(request):
             data = json.loads(request.body.decode("utf-8"))
             task_type = data.get("type")
             difficulty = data.get("difficulty")
-            frequency = data.get("frequency")
+            
             duration = data.get("duration")
             user_email = data.get("email")
 
@@ -123,7 +123,7 @@ def generate_task(request):
                  f"Generate one unique {task_type} productivity task that matches these details:\n"
     f"- Difficulty: {difficulty}\n"
     f"- Duration: {duration}\n"
-    f"- Frequency: {frequency}\n"
+   
     f"- Task type: {task_type} (Active = movement, exercise, or cleaning. Stationary = reading, writing, organizing, or creative focus.)\n\n"
     
     f"The task must:\n"
@@ -182,7 +182,7 @@ def generate_task(request):
                 "user_id": user_id, 
                 "task_type": task_type,
                 "difficulty": difficulty,
-                "frequency": frequency,
+               
                 "duration": duration,
                 "description": generated_task,
                 "status": "not started",
@@ -223,22 +223,19 @@ def task_dashboard(request):
         },
     )
 
-#CHANGED
-def task_frequency(request):
-    return render(request, "task_frequency.html")
 
 
 def task_duration(request):
     # get data from previous selections
     task_type = request.GET.get('type')
     difficulty = request.GET.get('difficulty')
-    frequency = request.GET.get('frequency')
+   
 
     if request.method == 'POST':
         duration = request.POST.get('duration')
 
         #  Example: generate a simple task description (you can replace this with your AI call later)
-        generated_task = f"A {difficulty} {task_type} task for {duration} minutes ({frequency} frequency)."
+        generated_task = f"A {difficulty} {task_type} task for {duration} minutes."
 
         #  Redirect to the result page, passing the generated task as a query parameter
         return redirect(f'/result/?task={generated_task}')
@@ -578,40 +575,51 @@ def profile_user(request):
 
     user_name = request.session.get("user_name")
     user_email = request.session.get("user_email")
+    user_id = request.session.get("user_id")
 
+    # Handle profile image upload
     if request.method == 'POST' and 'image' in request.FILES:
         image_file = request.FILES['image']
-
-        # Ensure the directory exists
         save_dir = os.path.join(settings.MEDIA_ROOT, "profile_pics")
-        os.makedirs(save_dir, exist_ok=True)  # ✅ creates folder if it doesn't exist
-
-        # Sanitize filename (optional: remove spaces, etc.)
+        os.makedirs(save_dir, exist_ok=True)
         filename = image_file.name.replace(" ", "_")
-
-        # Full path to save
         file_path = os.path.join("profile_pics", filename)
         full_path = os.path.join(settings.MEDIA_ROOT, file_path)
-
-        # Save uploaded file
         with open(full_path, "wb+") as f:
             for chunk in image_file.chunks():
                 f.write(chunk)
-
-        # Save path in session (or database if persistent storage needed)
         request.session['profile_image'] = file_path
         return redirect('profile_user')
 
-    # Show profile image (default if not uploaded)
+    # Handle edit profile form
+    if request.method == "POST" and 'email' in request.POST:
+        new_email = request.POST.get("email")
+        new_password = request.POST.get("password")
+
+        # Build update dict
+        update_data = {"email": new_email}
+        if new_password:
+            update_data["password"] = new_password
+
+        # Update in Supabase
+        supabase.table("user").update(update_data).eq("user_id", user_id).execute()
+
+        # Update session
+        request.session["user_email"] = new_email
+
+        messages.success(request, "Profile updated successfully!")
+        return redirect("profile_user")
+
     profile_image = request.session.get('profile_image', 'default_profile.png')
 
     context = {
         "user_name": user_name,
         "user_email": user_email,
         "profile_image": profile_image,
-        "MEDIA_URL": settings.MEDIA_URL,  #  add this
+        "MEDIA_URL": settings.MEDIA_URL,
     }
     return render(request, "profile_user.html", context)
+
 
 
 def admin_profile(request):
@@ -662,3 +670,44 @@ from django.shortcuts import render
 def task_summary(request):
     task = request.GET.get("task", "No task description available.")
     return render(request, "task_summary.html", {"task": task})
+
+def leaderboard(request):
+    # Ensure user is logged in
+    if "user_id" not in request.session:
+        messages.warning(request, "Please log in first.")
+        return redirect("login")
+
+    # Fetch task sessions where status is 'completed'
+    response = supabase.table("tasksession") \
+        .select("user_id, status") \
+        .eq("status", "completed") \
+        .execute()
+    sessions = response.data or []
+
+    # Count completed tasks per user
+    user_task_counts = {}
+    for s in sessions:
+        uid = s.get("user_id")
+        if uid:
+            user_task_counts[uid] = user_task_counts.get(uid, 0) + 1
+
+    # Sort and keep top 3
+    top_users = sorted(user_task_counts.items(), key=lambda x: x[1], reverse=True)[:3]
+
+    # Fetch user names for the top 3
+    user_ids = [u[0] for u in top_users]
+    if user_ids:
+        user_response = supabase.table("user").select("user_id, name").in_("user_id", user_ids).execute()
+        user_data = {u["user_id"]: u["name"] for u in (user_response.data or [])}
+    else:
+        user_data = {}
+
+    leaderboard = [
+        {"name": user_data.get(uid, "Unknown"), "completed": count}
+        for uid, count in top_users
+    ]
+
+    context = {
+        "leaderboard": leaderboard,
+    }
+    return render(request, "leaderboard.html", context)
