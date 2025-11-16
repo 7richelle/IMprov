@@ -1,139 +1,196 @@
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
+/* PREMIUM DARK BACKGROUND */
 body {
-  background: linear-gradient(135deg, #D5F3FF, #4A90E2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  background: #0d0d0d;
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
+/* Dashboard wrapper */
 .dashboard {
-  background: #fff;
-  width: 90%;
-  max-width: 1500px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  padding: 30px 40px;
-  min-height: 700px; 
+  display: flex;
+  flex-direction: column;
 }
 
-.top-bar {
+/* ------------------------------------------------ */
+/* PREMIUM HEADER (FROM LEADERBOARD) */
+/* ------------------------------------------------ */
+.premium-header {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
 }
 
-.icon-home, .icon-profile {
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.icon-home:hover, .icon-profile:hover {
-  transform: scale(1.1);
-}
-
-.right-buttons {
+/* Left Section */
+.left-side {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
 }
 
-.logout-btn {
-  background: #e74c3c;
-  color: white;
-  border: none;
+.logo {
+  font-size: 22px;
+  filter: drop-shadow(0 0 5px gold);
+}
+
+/* NAV BUTTONS (HOME LEFT SIDE) */
+.nav-btn {
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  color: #f5deb4;
   padding: 8px 14px;
-  border-radius: 6px;
+  border-radius: 10px;
+  transition: 0.25s ease;
+}
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+
+/* RIGHT MENU */
+.nav-menu {
+  display: flex;
+  gap: 22px;
+}
+
+.nav-item {
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 14px;
+
+  color: #e9e9e9;
+  transition: 0.25s ease;
+}
+
+/* Hover Glow */
+.nav-item:hover {
+  background: rgba(255,255,255,0.10);
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+/* ACTIVE - GOLD */
+.nav-item.active {
+  background: linear-gradient(135deg, #ffd978, #ffb300);
+  color: #000;
+  box-shadow: 0 0 12px rgba(255,200,75,0.7);
+}
+
+/* Logout form inline */
+.nav-menu .logout-form {
+  display: inline-block;
+  margin: 0;
+}
+
+/* Premium Logout Button */
+.nav-menu .logout-form .logout-btn {
+  background: linear-gradient(135deg, #ff5f5f, #ff1f1f);
+  color: #fff;
+  border: none;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
+  padding: 8px 14px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(255,95,95,0.5);
+  transition: 0.3s ease;
+  font-size: 16px;
 }
 
-.logout-btn:hover {
-  background: #c0392b;
+.nav-menu .logout-form .logout-btn:hover {
+  background: linear-gradient(135deg, #ff7f7f, #ff3f3f);
+  transform: translateY(-2px) scale(1.02);
 }
 
-.content h2 {
-  color: #2c3e50;
-  font-size: 1.5rem;
+/* ------------------------------------------------ */
+/* PREMIUM PROGRESS CONTENT SECTION */
+/* ------------------------------------------------ */
+.progress-content {
+  max-width: 1500px;
+  margin: 50px auto;
+  padding: 30px;
   text-align: center;
-  margin-bottom: 15px;
+}
+
+.progress-content h2 {
+  font-size: 33px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ffe99d, #ffcf33);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 25px;
 }
 
 .total {
-  text-align: center;
-  font-weight: bold;
-  color: #27ae60;
-  font-size: 1.2rem;
-  margin-bottom: 30px;
+  font-size: 1.4rem;
+  color: #ffe9ba;
+  margin-bottom: 40px;
 }
 
 .total span {
-  color: #2c3e50;
+  color: #ffcf33;
+  font-weight: 700;
 }
 
+/* CARDS */
 .progress-cards {
   display: flex;
-  gap: 30px;
   justify-content: center;
-  flex-wrap: wrap;
+  gap: 25px;
+  margin-top: 25px;
 }
 
+/* PREMIUM GLASS CARDS */
 .progress-card {
-  flex: 1;
-  min-width: 280px;
-  background: #f8faff;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  transition: all 0.3s ease;
+  background: rgba(255,255,255,0.08);
+  border-radius: 22px;
+  padding: 25px;
+  width: 360px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 18px rgba(255,255,255,0.05);
+  transition: 0.3s ease;
 }
 
 .progress-card:hover {
-  transform: translateY(-5px);
-  border-color: #4A90E2;
-  box-shadow: 0 4px 10px rgba(74,144,226,0.2);
-}
-
-.progress-card .icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
 }
 
 .progress-card h3 {
-  color: #2980b9;
-  margin-bottom: 10px;
+  color: #ffd978;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.progress-card .icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
 }
 
 .progress-card p {
-  color: #555;
-  font-size: 1rem;
-  margin: 4px 0;
-}
-.home-link {
-  text-decoration: none;
-  color: #4A90E2;
-  font-weight: bold;
-  font-size: 1rem;
-}
-.progress-link {
-  text-decoration: none;
-  color: #4A90E2;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: 0.3s;
-}
-.progress-link.active {
-  color: #2c3e50;
-  border-bottom: 2px solid #4A90E2;
+  font-size: 1.2rem;
+  color: #ddd;
+  margin-bottom: 10px;
 }

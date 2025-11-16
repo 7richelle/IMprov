@@ -1,166 +1,286 @@
-* {
+/* ---------------------------- */
+/* Premium Global Styling */
+/* ---------------------------- */
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Poppins", sans-serif;
+  background: #0d0d0d;
+  color: white;
+  overflow-x: hidden;
 }
 
-body {
-  background: linear-gradient(135deg, #D5F3FF, #4A90E2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+/* Fade Up Animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.dashboard {
-  background: #fff;
-  width: 90%;
-  max-width: 1500px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  padding: 30px 40px;
-  min-height: 700px; 
+.fade-up {
+  animation: fadeUp 0.8s ease forwards;
 }
 
-.top-bar {
+/* ---------------------------- */
+/* HEADER (Matches Leaderboard) */
+/* ---------------------------- */
+.premium-header {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
 }
 
-.right-buttons {
+.left-side {
   display: flex;
   align-items: center;
-  gap: 20px; /* adjust spacing */
+  gap: 16px;
 }
 
-.progress-link {
-  text-decoration: none;
-  color: #4A90E2;
-  font-weight: bold;
-  font-size: 1rem;
+.logo {
+  font-size: 22px;
+  filter: drop-shadow(0 0 5px gold);
 }
+
+/* Nav */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-item, .nav-btn {
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  color: #eaeaea;
+  padding: 8px 16px;
+  border-radius: 10px;
+  transition: 0.25s ease;
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, #ffd978, #ffb300);
+  color: black;
+  box-shadow: 0 0 12px rgba(255,200,75,0.7);
+}
+
+.nav-item:hover, .nav-btn:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+
+/* Logout Button */
 
 .logout-btn {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
+  background: linear-gradient(135deg, #ff5f5f, #ff1f1f); /* Red gradient */
+  color: #fff; /* White text */
+  border: none; /* No border */
+  font-weight: 600; /* Bold text */
+  cursor: pointer; /* Pointer on hover */
+  padding: 8px 14px; /* Space inside button */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(255,95,95,0.5); /* Soft shadow for depth */
+  transition: 0.3s ease; /* Smooth hover transition */
+  text-decoration: none; /* Remove underline */
 }
 
 .logout-btn:hover {
-  background: #c0392b;
+  background: linear-gradient(135deg, #ff7f7f, #ff3f3f); /* Lighter gradient on hover */
+  transform: translateY(-2px) scale(1.02); /* Slight lift and scale */
+}
+/* Make form inline inside nav-menu */
+.nav-menu .logout-form {
+  display: inline-block;  /* shrink-wrap */
+  margin: 0;
+}
+/* Premium Logout Button */
+.nav-menu .logout-form .logout-btn {
+  background: linear-gradient(135deg, #ff5f5f, #ff1f1f);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(255,95,95,0.5);
+  transition: 0.3s ease;
+  text-decoration: none;
+  font-size: 16px;
+  display: inline-block;  /* ensures proper sizing */
+}
+/* Hover effect */
+.nav-menu .logout-form .logout-btn:hover {
+  background: linear-gradient(135deg, #ff7f7f, #ff3f3f);
+  transform: translateY(-2px) scale(1.02);
 }
 
-.content h2 {
-  color: #2c3e50;
-  margin-bottom: 15px;
+
+/* ---------------------------- */
+/* MAIN CONTAINER */
+/* ---------------------------- */
+.task-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
 }
 
-.task-type {
-  display: flex;
-  gap: 20px;
+.premium-title {
+  font-size: 38px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ffe99d, #ffcf33);
+  -webkit-background-clip: text;
+  color: transparent;
   margin-bottom: 40px;
 }
 
+/* ---------------------------- */
+/* GLASS CARDS */
+/* ---------------------------- */
+.card-glass {
+  background: rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 35px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 0 20px rgba(255,255,255,0.05);
+  transition: 0.4s ease;
+}
+
+.card-glass:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(255,255,255,0.1);
+}
+
+.card-glass h2 {
+  color: #ffd978;
+}
+
+/* ---------------------------- */
+/* OPTION CARDS */
+/* ---------------------------- */
+.task-type {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
 .option-card {
-  flex: 1;
-  border: 2px solid #ddd;
-  border-radius: 10px;
+  width: 260px;
   cursor: pointer;
-  transition: all 0.3s;
+  border-radius: 18px;
 }
 
-.option-card input {
-  display: none;
-}
+.option-card input { display: none; }
 
-.option-content {
+.glass-option {
+  background: rgba(255,255,255,0.05);
   padding: 20px;
-  text-align: center;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  transition: 0.3s ease;
 }
 
-.option-content .icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.option-card:hover,
+.glass-option:hover,
 .option-card input:checked + .option-content {
-  border-color: #4A90E2;
-  background: #f0f8ff;
+  background: rgba(255,255,255,0.15);
+  border-color: #ffd978;
+  transform: translateY(-6px);
+  box-shadow: 0 0 25px rgba(255,224,130,0.3);
 }
 
+.icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+/* ---------------------------- */
+/* DIFFICULTY (BUTTON STYLE) */
+/* ---------------------------- */
 .difficulty {
   display: flex;
+  justify-content: center;
   gap: 20px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .difficulty-btn {
-  flex: 1;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  text-align: center;
-  padding: 15px;
   cursor: pointer;
-  transition: all 0.3s;
 }
 
-.difficulty-btn input {
-  display: none;
+.glass-btn {
+  background: rgba(255,255,255,0.04);
+  border-radius: 15px;
+  padding: 18px 25px;
+  min-width: 180px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: 0.25s ease;
 }
 
-.difficulty-btn:hover,
+.glass-btn:hover,
 .difficulty-btn input:checked + span {
-  border-color: #4A90E2;
-  background: #f0f8ff;
+  background: rgba(255,255,255,0.15);
+  border-color: #ffd978;
+  transform: translateY(-6px);
+  box-shadow: 0 0 25px rgba(255,224,130,0.3);
 }
 
-.difficulty-btn span {
-  display: block;
-  font-size: 1.2rem;
-  color: #333;
+span small {
+  color: #ccc;
 }
 
-.difficulty-btn small {
-  display: block;
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 4px;
-}
-
-.next-btn {
-  display: block;
-  margin-left: auto;
-  background: #50E3C2;
+/* ---------------------------- */
+/* FINAL BUTTON */
+/* ---------------------------- */
+.premium-btn {
+  background: linear-gradient(135deg, #ffd978, #ffb300);
   border: none;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
+  padding: 14px 26px;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.3s;
-  margin-top: 50px;
+  transition: 0.3s;
+  color: black;
+  margin-top: 20px;
 }
 
-.next-btn:hover {
-  background: #4A90E2;
+.premium-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 0 15px rgba(255,210,90,0.8);
 }
-.home-link {
-  text-decoration: none;
-  color: #4A90E2;
+
+.output {
+  margin-top: 20px;
   font-weight: bold;
-  font-size: 1rem;
-  transition: 0.3s;
+  color: #ffd978;
 }
-.home-link.active {
-  color: #2c3e50;
-  border-bottom: 2px solid #4A90E2;
+/* Hide the actual radio circle */
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.gold-text {
+  background: linear-gradient(135deg, #ffe37b, #ffb300);
+  -webkit-background-clip: text;
+  color: transparent;
 }

@@ -1,0 +1,338 @@
+/* --------------------- */
+/* GLOBAL STYLING */
+/* --------------------- */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #0d0d0d;
+  color: white;
+  overflow-x: hidden;
+}
+
+.top-bar {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  padding: 18px 30px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-link.active {
+  background: linear-gradient(135deg, #f7d57b, #ffb300);
+  color: black;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.leaderboard-container {
+  padding: 40px;
+}
+
+.title {
+  font-size: 38px;
+  font-weight: 700;
+  text-align: center;
+  background: linear-gradient(90deg, #ffe99d, #ffcf33);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* --------------------- */
+/* PYRAMID LAYOUT */
+/* --------------------- */
+.pyramid-container {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 45px;
+}
+
+/* --------------------- */
+/* PREMIUM CARD STYLES */
+/* --------------------- */
+.pyramid-card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 25px;
+  padding: 30px;
+  width: 260px;
+  text-align: center;
+  position: relative;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(255,255,255,0.05);
+  transition: 0.4s ease;
+}
+
+.pyramid-card:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+
+/* --------------------- */
+/* BADGES */
+/* --------------------- */
+.rank-badge {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  color: black;
+}
+
+/* GOLD */
+.gold-bg { 
+  background: linear-gradient(135deg, #ffe37b, #ffb300);
+}
+
+/* SILVER */
+.silver-bg {
+  background: linear-gradient(135deg, #d9d9d9, #a9a9a9);
+  color: black;
+}
+
+/* BRONZE */
+.bronze-bg {
+  background: linear-gradient(135deg, #d19966, #b87333);
+}
+
+/* --------------------- */
+/* MEDAL ICONS */
+/* --------------------- */
+.medal-icon {
+  width: 55px;
+  position: absolute;
+  top: -18px;
+  right: -18px;
+}
+
+.gold { filter: drop-shadow(0 0 15px gold); }
+.silver { filter: drop-shadow(0 0 12px silver); }
+.bronze { filter: drop-shadow(0 0 12px #b87333); }
+
+/* --------------------- */
+/* GLOW EFFECTS */
+/* --------------------- */
+.glow-gold {
+  box-shadow: 0 0 35px rgba(255, 210, 90, 0.6);
+}
+
+.glow-silver {
+  box-shadow: 0 0 35px rgba(200, 200, 200, 0.5);
+}
+
+.glow-bronze {
+  box-shadow: 0 0 35px rgba(181, 104, 50, 0.5);
+}
+
+/* --------------------- */
+/* GOLD SHINE ANIMATION */
+/* --------------------- */
+.shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 300%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: shineMove 3s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes shineMove {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+/* --------------------- */
+/* SECOND ROW */
+/* --------------------- */
+.second-row {
+  display: flex;
+  gap: 40px;
+}
+
+/* --------------------- */
+/* REST OF RANKS */
+/* --------------------- */
+.rest-container {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rest-card {
+  background: rgba(255,255,255,0.05);
+  padding: 18px 22px;
+  border-radius: 18px;
+  display: flex;
+  justify-content: space-between;
+  backdrop-filter: blur(6px);
+  animation: fadeUp 0.5s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.rank-num { font-weight: 700; color: #ffe584; }
+.rest-name { font-weight: 600; }
+.rest-score { color: #bbb; }
+
+/* --------------------- */
+.no-data {
+  text-align: center;
+  margin-top: 40px;
+  color: #ccc;
+}
+/* ------------------------------------------------ */
+/* PREMIUM HEADER */
+/* ------------------------------------------------ */
+.premium-header {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 15px 40px;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+/* Left Section */
+.left-side {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 22px;
+  filter: drop-shadow(0 0 5px gold);
+}
+
+/* ----------------------------------------------- */
+/* NAV BUTTONS (HOME LEFT SIDE) */
+/* ----------------------------------------------- */
+.nav-btn {
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  color: #f5deb4;
+  padding: 8px 14px;
+  border-radius: 10px;
+  transition: 0.25s ease;
+}
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+
+/* ----------------------------------------------- */
+/* RIGHT MENU */
+/* ----------------------------------------------- */
+.nav-menu {
+  display: flex;
+  gap: 22px;
+}
+
+.nav-item {
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 14px;
+
+  color: #e9e9e9;
+  transition: 0.25s ease;
+  position: relative;
+}
+
+/* Hover Glow */
+.nav-item:hover {
+  background: rgba(255,255,255,0.10);
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+/* ACTIVE (GOLD) */
+.nav-item.active {
+  background: linear-gradient(135deg, #ffd978, #ffb300);
+  color: #000;
+  box-shadow: 0 0 12px rgba(255,200,75,0.7);
+}
+
+.nav-item.active:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+/* ----------------------------------------------- */
+/* RESPONSIVE */
+/* ----------------------------------------------- */
+@media (max-width: 700px) {
+  .premium-header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 20px;
+  }
+  .nav-menu {
+    gap: 14px;
+  }
+}
+/* Logout button specifically */
+.logout-btn {
+  background: linear-gradient(135deg, #ff5f5f, #ff1f1f); /* Red gradient */
+  color: #fff; /* White text */
+  border: none; /* No border */
+  font-weight: 600; /* Bold text */
+  cursor: pointer; /* Pointer on hover */
+  padding: 8px 14px; /* Space inside button */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(255,95,95,0.5); /* Soft shadow for depth */
+  transition: 0.3s ease; /* Smooth hover transition */
+  text-decoration: none; /* Remove underline */
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #ff7f7f, #ff3f3f); /* Lighter gradient on hover */
+  transform: translateY(-2px) scale(1.02); /* Slight lift and scale */
+}
+/* Make form inline inside nav-menu */
+.nav-menu .logout-form {
+  display: inline-block;  /* shrink-wrap */
+  margin: 0;
+}
+/* Premium Logout Button */
+.nav-menu .logout-form .logout-btn {
+  background: linear-gradient(135deg, #ff5f5f, #ff1f1f);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(255,95,95,0.5);
+  transition: 0.3s ease;
+  text-decoration: none;
+  font-size: 16px;
+  display: inline-block;  /* ensures proper sizing */
+}
+/* Hover effect */
+.nav-menu .logout-form .logout-btn:hover {
+  background: linear-gradient(135deg, #ff7f7f, #ff3f3f);
+  transform: translateY(-2px) scale(1.02);
+}
