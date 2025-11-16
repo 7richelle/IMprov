@@ -295,6 +295,7 @@ input[type="radio"] {
   position: relative;
   z-index: 2;
   display: inline-block;
+  height: 150px;
 
   /* Intensified glow */
   text-shadow: 
@@ -338,10 +339,10 @@ input[type="radio"] {
 }
 .shine {
   position: absolute;
-  top: 0;
+  top: 10;
   left: -50%;
   width: 200%;
-  height: 100%;
+  height: 10%;
   background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
   animation: shineMove 3s infinite linear;
   pointer-events: none;
@@ -379,4 +380,5 @@ input[type="radio"] {
   font-weight: 500;
   color: #ffd978;
   letter-spacing: 1px;
+  height: 30px;
 }
