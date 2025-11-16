@@ -630,37 +630,48 @@ def admin_profile(request):
 
     user_name = request.session.get("user_name")
     user_email = request.session.get("user_email")
+    user_id = request.session.get("user_id")
 
+    # Handle profile image upload
     if request.method == 'POST' and 'image' in request.FILES:
         image_file = request.FILES['image']
-
-        # Ensure the directory exists
         save_dir = os.path.join(settings.MEDIA_ROOT, "profile_pics")
-        os.makedirs(save_dir, exist_ok=True)  # ✅ creates folder if it doesn't exist
-
-        # Sanitize filename (optional: remove spaces, etc.)
+        os.makedirs(save_dir, exist_ok=True)
         filename = image_file.name.replace(" ", "_")
-
-        # Full path to save
         file_path = os.path.join("profile_pics", filename)
         full_path = os.path.join(settings.MEDIA_ROOT, file_path)
-
-        # Save uploaded file
         with open(full_path, "wb+") as f:
             for chunk in image_file.chunks():
                 f.write(chunk)
-
-        # Save path in session (or database if persistent storage needed)
         request.session['profile_image'] = file_path
         return redirect('admin_profile')
 
-    # Show profile image (default if not uploaded)
+    # Handle edit profile form
+    if request.method == "POST" and 'email' in request.POST:
+        new_email = request.POST.get("email")
+        new_password = request.POST.get("password")
+
+        # Build update dict
+        update_data = {"email": new_email}
+        if new_password:
+            update_data["password"] = new_password
+
+        # Update in Supabase
+        supabase.table("user").update(update_data).eq("user_id", user_id).execute()
+
+        # Update session
+        request.session["user_email"] = new_email
+
+        messages.success(request, "Profile updated successfully!")
+        return redirect("admin_profile")
+
     profile_image = request.session.get('profile_image', 'default_profile.png')
 
     context = {
         "user_name": user_name,
         "user_email": user_email,
         "profile_image": profile_image,
+        "MEDIA_URL": settings.MEDIA_URL,
     }
     return render(request, "admin_profile.html", context)
 

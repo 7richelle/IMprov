@@ -187,6 +187,9 @@ body {
 .progress-card .icon {
   font-size: 3.5rem;
   margin-bottom: 12px;
+    background: linear-gradient(135deg, #ffe37b, #ffb300);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .progress-card p {

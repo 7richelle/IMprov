@@ -142,6 +142,7 @@ body {
   -webkit-background-clip: text;
   color: transparent;
   margin-bottom: 40px;
+  margin-top: 50px;
 }
 
 /* ---------------------------- */
@@ -283,4 +284,99 @@ input[type="radio"] {
   background: linear-gradient(135deg, #ffe37b, #ffb300);
   -webkit-background-clip: text;
   color: transparent;
+}
+.improv-title {
+  font-size: 7rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #ffe8a3, #ffcf33, #ffb300);
+  -webkit-background-clip: text;
+  color: transparent;
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+
+  /* Intensified glow */
+  text-shadow: 
+    0 0 20px rgba(255, 217, 120, 0.6),
+    0 0 40px rgba(255, 217, 120, 0.5),
+    0 0 60px rgba(255, 217, 120, 0.4),
+    0 0 80px rgba(255, 217, 120, 0.3);
+
+  animation: glow 2s infinite ease-in-out;
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 
+      0 0 20px rgba(255, 217, 120, 0.6),
+      0 0 40px rgba(255, 217, 120, 0.5),
+      0 0 60px rgba(255, 217, 120, 0.4),
+      0 0 80px rgba(255, 217, 120, 0.3);
+  }
+  50% {
+    text-shadow: 
+      0 0 40px rgba(255, 217, 120, 0.8),
+      0 0 60px rgba(255, 217, 120, 0.7),
+      0 0 80px rgba(255, 217, 120, 0.6),
+      0 0 100px rgba(255, 217, 120, 0.5);
+  }
+  100% {
+    text-shadow: 
+      0 0 20px rgba(255, 217, 120, 0.6),
+      0 0 40px rgba(255, 217, 120, 0.5),
+      0 0 60px rgba(255, 217, 120, 0.4),
+      0 0 80px rgba(255, 217, 120, 0.3);
+  }
+}
+
+
+@keyframes glow {
+  0% { text-shadow: 0 0 15px rgba(255, 217, 120, 0.4); }
+  50% { text-shadow: 0 0 30px rgba(255, 217, 120, 0.8); }
+  100% { text-shadow: 0 0 15px rgba(255, 217, 120, 0.4); }
+}
+.shine {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: shineMove 3s infinite linear;
+  pointer-events: none;
+  z-index: 1;   /* behind text */
+  mix-blend-mode: lighten; /* optional: makes shine blend nicely behind text */
+}
+
+@keyframes shineMove {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+.pyramid-card {
+  position: relative;
+  width: 800px;
+  text-align: center;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+  transition: 0.4s ease;
+  display: inline-block;
+}
+
+.pyramid-card:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+.pyramid-card-wrapper {
+  display: flex;
+  justify-content: center; /* centers the pyramid-card horizontally */
+  width: 100%;             /* full page width */
+  margin-bottom: 25px;     /* space below */
+}
+.pyramid-card h2 {
+  margin-top: 0px;  /* reduce space above */
+  margin-bottom: 20px;  /* optional: remove bottom space if needed */
+  font-size: 2rem;
+  font-weight: 500;
+  color: #ffd978;
+  letter-spacing: 1px;
 }
